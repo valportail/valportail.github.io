@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="800"
+   height="800"
+   viewBox="0 0 211.66667 211.66667"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="logo2.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.45254834"
+     inkscape:cx="604.35533"
+     inkscape:cy="351.34368"
+     inkscape:window-width="1920"
+     inkscape:window-height="1008"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="fill:#ff6a00;fill-opacity:1;stroke-width:0.466696;stroke-linecap:round;stroke-linejoin:round"
+       id="path4"
+       cx="105.83334"
+       cy="105.83334"
+       r="105.83334" />
+    <g
+       id="g4"
+       transform="matrix(0.24804687,0,0,0.24804685,6.6145916,6.6145972)">
+      <rect
+         style="fill:#303030;fill-opacity:1;stroke-width:1.81096;stroke-linecap:round;stroke-linejoin:round"
+         id="rect2"
+         width="159.99998"
+         height="505.96448"
+         x="106.66665"
+         y="168.65477"
+         transform="matrix(1,0,0.31622778,0.94868329,0,0)" />
+      <circle
+         style="fill:#ffffff;stroke-width:1.59703;stroke-linecap:round;stroke-linejoin:round"
+         id="path3"
+         cx="531.35199"
+         cy="268.64798"
+         r="108.64799" />
+    </g>
+  </g>
+</svg>

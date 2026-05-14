@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Valentin PORTAIL">
+    <meta name="keywords" content="Mairie, Triskalya ha Plafälda, Aglitanie">
+    <meta name="description" content="Page d'accueil du site de la mairie de Triskalya ha Plafälda">
+
+    <link rel="icon" href="img/blason.png">
+    <link rel="stylesheet" href="style/common.css">
+
+    <title>TriskOnline - Triskalya ha Plafälda</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html"><img alt="Blason de la commune de Triskalya ha Plafälda" src="img/blason.svg"></a>
+                <p>Mairie de Triskalya ha Plafälda</p>
+            </div>
+
+            <label for="mobile">Afficher / Cacher le menu</label>
+            <input type="checkbox" id="mobile" role="button" aria-pressed="true">
+
+            <ul>
+                <li><a href="mairie.html">La mairie</a></li>
+                <li><a href="vivre.html">Vivre à Triskalya</a></li>
+                <li><a href="enfance-sante.html">Enfance - Santé</a></li>
+                <li><a href="sport-culture.html">Sport - Culture</a></li>
+                <li><a href="#">Espace TriskOnline</a></li>
+                <li><a href="triskask.html">Messagerie TriskAsk</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <header>
+            <h1>Accès à votre espace TriskOnline</h1>
+
+            <figure>
+                <img alt="Photographie montrant des câbles de fibre optique" src="img/connexion.jpg">
+                <figcaption>La plateforme TriskOnline vous aide dans vos démarches administratives.</figcaption>
+            </figure>
+        </header>
+
+        <div class="corps">
+            <div class="contenu">
+                <noscript>
+                    <p>
+                        Afin de garantir un fonctionnement optimal du formulaire, merci d'activer JavaScript sur cette page.
+                        Il sera utilisé dans le but de vérifier les informations saisies dans le formulaire et de les envoyer au serveur.
+                    </p>
+                </noscript>
+
+                <section>
+                    <h2>Connexion</h2>
+                    <p>
+                        Si vous avez déjà un compte, ce formulaire vous permet de vous connecter à TriskOnline.
+                        Si vous ne l'avez pas encore créé, veuillez plutôt utiliser le formulaire d'inscription ci-dessous. 
+                    </p>
+
+                    <form id="login-form">
+                        <fieldset>
+                            <label>Nom d'utilisateur : <input type="text" class="form-texte" name="username"></label>
+                            <label>Mot de passe : <input type="password" class="form-texte" name="userpwd"></label>
+
+                            <input class="form-bouton" type="submit" value="Se connecter" name="submit"/>
+                        </fieldset>
+                    </form>
+
+                    <p id="prompt"></p>
+                </section>
+                
+                <script src="script/login.js"></script>
+
+                <section>
+                    <h2>Inscription</h2>
+                    <p>
+                        Afin d'accéder facilement à toutes vos démarches administratives, inscrivez-vous sur le site.
+                        Vous aurez alors accès à TriskOnline, la plateforme administrative de la commune de Triskalya ha Plafälda.
+                        Si vous avez déjà un compte, veuillez utiliser le formulaire de connexion ci-dessus.
+                    </p>
+
+                    <form id="signup-form" method="post" action="htbin/register.py">
+                        <fieldset><legend>Informations personnelles</legend>
+                            <label>* Nom de famille : <input type="text" class="form-texte" id="lastname" name="lastname" required/></label>
+                            <label>* Prénom : <input type="text" class="form-texte" id="firstname" name="firstname" required></label>
+                            <label>Date de naissance : <input type="text" class="form-texte" id="birthdate" name="birthdate"></label>
+                            <label>* Nom d'utilisateur : <input type="text" class="form-texte" id="username" name="username" required></label>
+                            <label>* Mot de passe : <input type="password" class="form-texte" id="userpwd" name="userpwd" required></label>
+                            <label>* Adresse e-mail : <input type="text" class="form-texte" id="useremail" name="useremail" required></label>
+
+                            <input class="form-bouton" type="submit" value="Valider" id="signup-submit"/>
+                            <input class="form-bouton" type="reset" />
+                        </fieldset>
+                    </form>
+
+                    <p>Les champs avec une étoile (*) sont obligatoires.</p>
+
+                    <script src="script/register.js"></script>
+                </section>
+            </div>
+
+            <aside>
+                <section>
+                    <h2>Plateforme TriskOnline</h2>
+                
+                    <p>Le plateforme TriskOnline a été créée en 2015 afin d'aider les habitants de Triskalya ha Plafälda à effectuer leurs démarches administratives.</p>
+                    <p>Elle est accessible sur navigateur. Il suffit de créer un compte. Un justificatif sera demandé ultérieurement.</p>
+                    <p>Cette plateforme fait partie de la stratégie de transition numérique de la commune de Triskalya ha Plafälda.</p>
+                </section>
+            </aside>
+        </div>
+
+        <footer>
+            <a href="#">Revenir en haut</a>
+        </footer>
+    </main>
+
+    <footer id="contact">
+        <div class="adresse">
+            <p><em>Hôtel de ville</em> - 24 Rue Arladesi</p>
+            <p>300A - TRISKALYA HA PLAFALDA</p>
+        </div>
+
+        <div class="coordonnees">
+            <p><em>Téléphone</em> : <a href="tel:+14589416327">+14 589-416-327</a></p>
+            <p><em>Courriel</em> : <a href="mailto:trishat@triskalya.aa">trishat@triskalya.aa</a></p>
+        </div>
+    </footer>
+</body>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Valentin PORTAIL">
+    <meta name="keywords" content="Mairie, Triskalya ha Plafälda, Aglitanie">
+    <meta name="description" content="Page d'accueil du site de la mairie de Triskalya ha Plafälda">
+
+    <link rel="icon" href="img/blason.png">
+    <link rel="stylesheet" href="style/common.css">
+
+    <title>TriskAsk - Triskalya ha Plafälda</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html"><img alt="Blason de la commune de Triskalya ha Plafälda" src="img/blason.svg"></a>
+                <p>Mairie de Triskalya ha Plafälda</p>
+            </div>
+
+            <label for="mobile">Afficher / Cacher le menu</label>
+            <input type="checkbox" id="mobile" role="button" aria-pressed="true">
+
+            <ul>
+                <li><a href="mairie.html">La mairie</a></li>
+                <li><a href="vivre.html">Vivre à Triskalya</a></li>
+                <li><a href="enfance-sante.html">Enfance - Santé</a></li>
+                <li><a href="sport-culture.html">Sport - Culture</a></li>
+                <li><a href="triskonline.html">Espace TriskOnline</a></li>
+                <li><a href="#">Messagerie TriskAsk</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <header>
+            <h1>Messagerie TriskAsk</h1>
+
+            <figure>
+                <img alt="Le mot feedback (retour en anglais) écrit sur un tableau à craie" src="img/triskask.jpg">
+                <figcaption>La messagerie TriskAsk vous permet de faire part de vos remarques sur la vie communale.</figcaption>
+            </figure>
+        </header>
+
+        <div class="corps">
+            <div class="contenu">
+                <noscript>
+                    <p>
+                        Afin de garantir un fonctionnement optimal de la messagerie, merci d'activer JavaScript sur cette page.
+                        Il sera utilisé dans le but de communiquer avec le serveur.
+                    </p>
+                </noscript>
+
+                <section>
+                    <h2>Messages</h2>
+
+                    <div id="list-messages"></div>
+                </section>
+
+                <section>
+                    <h2>Envoyer un message</h2>
+                    
+                    <p>Avant d'envoyer votre message, vérifiez qu'il respecte bien les conditions d'utilisation :</p>
+
+                    <ul>
+                        <li>Évitez de divulguer des informations trop confidentielles sur vous. Les messages postés sont publics.</li>
+                        <li>Respectez les autres utilisateurs et ne les insultez pas.</li>
+                        <li>
+                            Tout message ayant un propos discriminatoire (racisme, homophobie...)
+                            ou étant susceptible de choquer certaines sensibilités sera sévèrement sanctionné.
+                        </li>
+                        <li>Il est également interdit de faire la promotion d'activités illégales.</li>
+                    </ul>
+
+                    <p>Votre nom d'utilisateur sera renseigné automatiquement si vous êtes déjà connecté sur l'espace TriskOnline.</p>
+
+                    <form id="chat-form">
+                        <fieldset><legend>Contenu du message</legend>
+                            <label for="msg">Écrivez votre message ici :</label><textarea name="msg" id="msg" rows="5"></textarea>
+
+                            <input class="form-bouton" type="submit" value="Envoyer" name="submit"/>
+                        </fieldset>
+                    </form>
+
+                    <p id="prompt"></p>
+
+                    <script src="script/jquery-3.6.4.min.js"></script>
+                    <script src="script/chat.js"></script>
+                </section>
+            </div>
+
+            <aside>
+                <section>
+                    <h2>Messagerie TriskAsk</h2>
+                
+                    <p>
+                        Dans la continuité de la stratégie de transition numérique de la commune de Triskalya ha Plafälda,
+                        la messagerie TriskAsk a été créée en 2019 afin d'aider les habitants de la commune au quotidien.
+                    </p>
+                    <p>
+                        Que ce soit pour faire part de difficultés lors de vos démarches administratives
+                        ou simplement pour avoir des renseignements sur la vie de la commune,
+                        nos équipes seront disponibles pour vous répondre.
+                    </p>
+                    <p>
+                        Vos messages seront traités en priorité s'ils sont envoyés du lundi au samedi entre 8:00 et 18:00,
+                        les horaires d'ouverture de la mairie.
+                    </p>
+                </section>
+            </aside>
+        </div>
+
+        <footer>
+            <a href="#">Revenir en haut</a>
+        </footer>
+    </main>
+
+    <footer id="contact">
+        <div class="adresse">
+            <p><em>Hôtel de ville</em> - 24 Rue Arladesi</p>
+            <p>300A - TRISKALYA HA PLAFALDA</p>
+        </div>
+
+        <div class="coordonnees">
+            <p><em>Téléphone</em> : <a href="tel:+14589416327">+14 589-416-327</a></p>
+            <p><em>Courriel</em> : <a href="mailto:trishat@triskalya.aa">trishat@triskalya.aa</a></p>
+        </div>
+    </footer>
+</body>

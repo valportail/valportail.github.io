@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+<!-- 2022-03-14 lun. 14:04 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Markov Text Generator, ou générer des phrases aléatoires</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Valentin PORTAIL" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="markov.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Markov Text Generator, ou générer des phrases aléatoires</h1>
+<div class="org-center">
+<p>
+
+</p>
+
+<p>
+Valentin PORTAIL - Prép'ISIMA 1 - 2021/2022
+</p>
+
+<p>
+<img src="./images/logo_uca.png" alt="logo_uca.png" /> <img src="./images/logo_isima.png" alt="logo_isima.png" />
+</p>
+
+<p>
+<a href="https://perso.isima.fr/~vaportail/pizz1/markov.html">Lien vers la page web</a>
+</p>
+
+
+<div class="figure">
+<p><img src="./images/markov.jpg" alt="markov.jpg" />
+</p>
+</div>
+
+<p>
+Image montant des lettres en bois formant le mot "keywords" (mots-clés)
+</p>
+</div>
+
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgfaedcd3">1. Enoncé du problème</a></li>
+<li><a href="#orga09181c">2. Solution proposée</a>
+<ul>
+<li><a href="#org122b968">2.1. Séparer les mots de la phrase complète</a></li>
+<li><a href="#org14135e1">2.2. Créer la chaîne de Markov</a></li>
+<li><a href="#org54cdcce">2.3. Choisir les mots aléatoirement</a></li>
+<li><a href="#orgc336085">2.4. Ecrire la phrase</a></li>
+<li><a href="#org1808359">2.5. Plan du programme final</a></li>
+</ul>
+</li>
+<li><a href="#orgcd291c6">3. Tests</a>
+<ul>
+<li><a href="#org47ebd2b">3.1. Test 1</a></li>
+<li><a href="#org509d829">3.2. Test 2</a></li>
+<li><a href="#orge8d50bd">3.3. Test 3</a></li>
+<li><a href="#orgf89dba4">3.4. Test 4</a></li>
+</ul>
+</li>
+<li><a href="#orgbe6476f">4. Description d'une autre solution</a></li>
+<li><a href="#org2030753">5. Conclusion</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfaedcd3" class="outline-2">
+<h2 id="orgfaedcd3"><span class="section-number-2">1</span> Enoncé du problème</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+L'objectif de cet exercice est de créer un générateur de texte aléatoire
+dans le but de faire parler des personnages de jeu-vidéo,
+même si les phrases n'ont aucun sens.
+</p>
+
+<p>
+Pour cela, nous disposons : 
+</p>
+
+<ul class="org-ul">
+<li>d'une phrase complète notée <i>t</i> ;</li>
+<li>d'une profondeur de <a href="https://fr.wikipedia.org/wiki/N-gramme">n-gramme</a> (les différents segments de notre texte)
+notée <i>d</i> ;</li>
+<li>de la longueur en mots de la phrase finale notée <i>l</i> ;</li>
+<li>d'un texte de départ noté <i>s</i>
+à partir duquel nous devrons constituer la phrase finale.</li>
+</ul>
+
+<p>
+Le programme devra renvoyer le texte généré aléatoirement.
+</p>
+
+<p>
+Pour cela, il faudra parcourir le texte pour créer une
+<a href="https://fr.wikipedia.org/wiki/Cha%C3%AEne_de_Markov">chaîne de Markov</a> où à chaque n-gramme seront associés
+les mots qui le suivent directement dans le texte.
+Ensuite, le texte final sera généré de manière pseudo-aléatoire,
+à l'aide d'une fonction qui nous est donnée.
+</p>
+
+<p>
+L'énoncé de l'exercice sur CodinGame nous invite à faire des recherches
+sur les chaînes de Markov et les n-grammes
+afin de mieux comprendre ce qu'on nous demande de faire.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga09181c" class="outline-2">
+<h2 id="orga09181c"><span class="section-number-2">2</span> Solution proposée</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org122b968" class="outline-3">
+<h3 id="org122b968"><span class="section-number-3">2.1</span> Séparer les mots de la phrase complète</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Afin de faciliter la manipulation des mots de la phrase <i>t</i>,
+on les sépare et on les met dans un tableau
+que l'on appellera <i>text</i>.
+</p>
+
+<p>
+Pour cela, on définit une fonction <i>separe_mots</i>
+qui prend en argument une chaîne de caractères <i>txt</i>, un tableau <i>tab</i>
+et un pointeur sur un entier <i>nb_mots</i>
+et qui copie les mots de <i>txt</i> séparés par un espace dans <i>tab</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="org07fd85e">
+<span style="color: #bd93f9; font-weight: bold;">void</span> <span style="color: #50fa7b; font-weight: bold;">separe_mots</span> <span style="color: #61bfff;">(</span><span style="color: #bd93f9; font-weight: bold;">char</span> * <span style="color: #ffc9e8;">txt</span>, <span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">tab</span><span style="color: #ff79c6;">[][</span>101<span style="color: #ff79c6;">]</span>, <span style="color: #bd93f9; font-weight: bold;">int</span> * <span style="color: #ffc9e8;">nb_mots</span><span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>;
+    <span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">mot</span><span style="color: #ff79c6;">[</span>101<span style="color: #ff79c6;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Mot que l'on &#233;tudie</span>
+
+    <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span>i = 0; i &lt;= strlen<span style="color: #50fa7b;">(</span>txt<span style="color: #50fa7b;">)</span>; ++i<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On parcourt le texte</span>
+        <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>txt<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> == <span style="color: #f1fa8c; font-style: italic;">' '</span> || txt<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> == <span style="color: #f1fa8c; font-style: italic;">'\0'</span><span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Si on tombe sur un espace ou sur la fin du texte</span>
+            strcat<span style="color: #bd93f9;">(</span>mot, <span style="color: #f1fa8c; font-style: italic;">"\0"</span><span style="color: #bd93f9;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On indique la fin du mot</span>
+            strcpy<span style="color: #bd93f9;">(</span>tab<span style="color: #0189cc;">[</span>*nb_mots<span style="color: #0189cc;">]</span>, mot<span style="color: #bd93f9;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On ins&#232;re le mot dans le tableau</span>
+            sprintf<span style="color: #bd93f9;">(</span>mot, <span style="color: #f1fa8c; font-style: italic;">""</span><span style="color: #bd93f9;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On r&#233;initialise mot</span>
+            *nb_mots += 1; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Permet de modifier la variable en dehors de la fonction</span>
+        <span style="color: #50fa7b;">}</span> <span style="color: #ff79c6; font-weight: bold;">else</span> <span style="color: #50fa7b;">{</span>
+            sprintf<span style="color: #bd93f9;">(</span>mot, <span style="color: #f1fa8c; font-style: italic;">"%s%c"</span>, mot, txt<span style="color: #0189cc;">[</span>i<span style="color: #0189cc;">]</span><span style="color: #bd93f9;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On ajoute le caract&#232;re au mot</span>
+        <span style="color: #50fa7b;">}</span>
+    <span style="color: #ff79c6;">}</span>
+<span style="color: #61bfff;">}</span>
+
+</pre>
+</div>
+
+<p>
+On utilise cette fonction dans le programme principal avec <i>t</i> et <i>text</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="org7ad6f62">
+<span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">text</span><span style="color: #61bfff;">[</span>101<span style="color: #61bfff;">][</span>101<span style="color: #61bfff;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Contient les mots de la phrase compl&#232;te</span>
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_mots</span> = 0; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Nombre de mots dans le tableau</span>
+
+<span style="color: #50fa7b; font-weight: bold;">separe_mots</span><span style="color: #61bfff;">(</span>t, text, &amp;nb_mots<span style="color: #61bfff;">)</span>;
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org14135e1" class="outline-3">
+<h3 id="org14135e1"><span class="section-number-3">2.2</span> Créer la chaîne de Markov</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Pour nous aider à manipuler la chaîne de Markov,
+on crée une structure appelée <i>markov</i>
+qui contient un élément de la chaîne de Markov,
+c'est-à-dire, un n-gramme <i>ngram</i>
+et un tableau contenant les valeurs associées <i>chain</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="orgad0b9fa">
+<span style="color: #ff79c6; font-weight: bold;">typedef</span> <span style="color: #ff79c6; font-weight: bold;">struct</span> <span style="color: #bd93f9; font-weight: bold;">markov</span> <span style="color: #61bfff;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">ngram</span><span style="color: #ff79c6;">[</span>101<span style="color: #ff79c6;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Le n-gramme (texte) qu'on &#233;tudie</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span>  <span style="color: #ffc9e8;">number_chains</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Le nombre de mots trouv&#233;s</span>
+    <span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">chain</span><span style="color: #ff79c6;">[</span>101<span style="color: #ff79c6;">][</span>101<span style="color: #ff79c6;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Un tableau contenant les mots trouv&#233;s</span>
+<span style="color: #61bfff;">}</span> <span style="color: #bd93f9; font-weight: bold;">markov</span>;
+
+</pre>
+</div>
+
+<p>
+Dans le programme principal, on crée une chaîne de Markov <i>chaines</i>
+qui contiendra les n-grammes et les mots qui leur sont associés,
+un entier <i>nb_chaines</i> représentant le nombre d'éléments dans la chaîne de Markov
+et une chaîne de caractères <i>n_gramme</i> représentant un n-gramme.
+</p>
+
+<p>
+On parcourt le tableau <i>text</i> :
+à chaque étape, on recompose le n-gramme à partir du tableau <i>text</i>
+dans la chaîne de caractères <i>n_gramme</i>,
+puis on compare avec les n-grammes présents dans la chaîne de Markov.
+</p>
+<ul class="org-ul">
+<li>Si l'une d'entre elles est identique à <i>n_gramme</i>,
+on ajoute le mot situé juste après le n-gramme au tableau <i>chaines[j].chain</i>.</li>
+<li>Sinon, on crée un nouvel élément dans lequel on insère <i>n-gramme</i>
+et on ajoute le mot situé juste après le n-gramme au tableau <i>chaines[j].chain</i>.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-C" id="orgf02bc92">
+<span style="color: #bd93f9; font-weight: bold;">markov</span> <span style="color: #ffc9e8;">chaines</span><span style="color: #61bfff;">[</span>101<span style="color: #61bfff;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Cha&#238;ne de Markov contenant les n-grammes</span>
+                     <span style="color: #6272a4;">//  </span><span style="color: #6272a4;">et les mots qui leur sont associ&#233;s</span>
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_chaines</span> = 0; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Nombre de n_grammes</span>
+<span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">n_gramme</span><span style="color: #61bfff;">[</span>101<span style="color: #61bfff;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">N-gramme que l'on &#233;tudit</span>
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">N-gramme que l'on &#233;tudit</span>
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">j</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Un des mots associ&#233;s au n-gramme &#233;tudi&#233;</span>
+
+<span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #61bfff;">(</span>i = 0; i &lt;= nb_mots-d-1; ++i<span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span>
+    sprintf<span style="color: #ff79c6;">(</span>n_gramme, <span style="color: #f1fa8c; font-style: italic;">""</span><span style="color: #ff79c6;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On initialise le texte du n-gramme</span>
+
+    <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On recompose le n-gramme &#224; partir des donn&#233;es du tableau contenant la phrase compl&#232;te</span>
+    <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span>j = 0; j &lt; d-1; ++j<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+        strcat<span style="color: #50fa7b;">(</span>n_gramme, text<span style="color: #bd93f9;">[</span>i+j<span style="color: #bd93f9;">]</span><span style="color: #50fa7b;">)</span>;
+        strcat<span style="color: #50fa7b;">(</span>n_gramme, <span style="color: #f1fa8c; font-style: italic;">" "</span><span style="color: #50fa7b;">)</span>;
+    <span style="color: #ff79c6;">}</span>
+    strcat<span style="color: #ff79c6;">(</span>n_gramme, text<span style="color: #50fa7b;">[</span>i+d-1<span style="color: #50fa7b;">]</span><span style="color: #ff79c6;">)</span>;
+    strcat<span style="color: #ff79c6;">(</span>n_gramme, <span style="color: #f1fa8c; font-style: italic;">"\0"</span><span style="color: #ff79c6;">)</span>;
+
+    j = 0;
+    <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span>strcmp<span style="color: #50fa7b;">(</span>n_gramme, chaines<span style="color: #bd93f9;">[</span>j<span style="color: #bd93f9;">]</span>.ngram<span style="color: #50fa7b;">)</span> &amp;&amp; <span style="color: #50fa7b;">(</span>j &lt; nb_chaines<span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+    <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On parcourt le tableau tant que l'on a pas trouv&#233; le bon n-gramme</span>
+        ++j;
+    <span style="color: #ff79c6;">}</span>
+
+    <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #ff79c6;">(</span>j == nb_chaines<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Si on n'a pas trouv&#233; un n-gramme correspondant</span>
+        strcpy<span style="color: #50fa7b;">(</span>chaines<span style="color: #bd93f9;">[</span>j<span style="color: #bd93f9;">]</span>.ngram, n_gramme<span style="color: #50fa7b;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On cr&#233;e un nouveau n-gramme...</span>
+        strcpy<span style="color: #50fa7b;">(</span>chaines<span style="color: #bd93f9;">[</span>j<span style="color: #bd93f9;">]</span>.chain<span style="color: #bd93f9;">[</span>chaines<span style="color: #0189cc;">[</span>j<span style="color: #0189cc;">]</span>.number_chains<span style="color: #bd93f9;">]</span>, text<span style="color: #bd93f9;">[</span>i+d<span style="color: #bd93f9;">]</span><span style="color: #50fa7b;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">... et on y associe le mot trouv&#233;.</span>
+        chaines<span style="color: #50fa7b;">[</span>j<span style="color: #50fa7b;">]</span>.number_chains = 1;
+        nb_chaines += 1;
+    <span style="color: #ff79c6;">}</span> <span style="color: #ff79c6; font-weight: bold;">else</span> <span style="color: #ff79c6;">{</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Si on a trouv&#233; un n-gramme correspondant</span>
+        strcat<span style="color: #50fa7b;">(</span>chaines<span style="color: #bd93f9;">[</span>j<span style="color: #bd93f9;">]</span>.chain<span style="color: #bd93f9;">[</span>chaines<span style="color: #0189cc;">[</span>j<span style="color: #0189cc;">]</span>.number_chains<span style="color: #bd93f9;">]</span>, text<span style="color: #bd93f9;">[</span>i+d<span style="color: #bd93f9;">]</span><span style="color: #50fa7b;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On associe au n-gramme le mot trouv&#233;.</span>
+        chaines<span style="color: #50fa7b;">[</span>j<span style="color: #50fa7b;">]</span>.number_chains += 1;
+    <span style="color: #ff79c6;">}</span>
+<span style="color: #61bfff;">}</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org54cdcce" class="outline-3">
+<h3 id="org54cdcce"><span class="section-number-3">2.3</span> Choisir les mots aléatoirement</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+On commence par définir la fonction <i>pick_option_index</i>
+à l'aide du pseudo-code fourni dans l'énoncé CodinGame.
+</p>
+
+<p>
+Elle prend en argument un entier <i>nb_options</i>
+représentant le nombre de choix possibles,
+modifie une variable globale <i>random_seed</i>
+et renvoie le reste de la division euclidienne
+entre <i>random_seed</i> et <i>nb_options</i>.
+</p>
+
+<p>
+Cette fonction a pour but de renvoyer des résultats "pseudo-aléatoires"
+afin de faciliter les tests de CodinGame.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="orgf7c71fe">
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">random_seed</span> = 0; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Variable globale n&#233;cessaire pour le bon fonctionnement de la fonction</span>
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #50fa7b; font-weight: bold;">pick_option_index</span><span style="color: #61bfff;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_options</span><span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span>
+    random_seed += 7; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Valeur arbitraire pour cr&#233;er du pseudo-al&#233;atoire</span>
+    <span style="color: #ff79c6; font-weight: bold;">return</span> random_seed % nb_options;
+<span style="color: #61bfff;">}</span>
+
+</pre>
+</div>
+
+<p>
+Dans le programme principal, afin de faciliter
+la manipulation des mots du texte <i>s</i>,
+on les sépare et on les met dans un tableau
+que l'on appellera <i>result</i>.
+</p>
+
+<p>
+On utilise la fonction <i>separe_mots</i> définie précedemment avec <i>s</i> et <i>result</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="orgbda8fd1">
+<span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">result</span><span style="color: #61bfff;">[</span>101<span style="color: #61bfff;">][</span>101<span style="color: #61bfff;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Tableau contenant le phrase finale</span>
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_mots_result</span> = 0; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Nombre de mots dans la phrase finale</span>
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">mk</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Element de la cha&#238;ne de Markov que l'on &#233;tudit</span>
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">ind_aleatoire</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Indice al&#233;atoire du mot choisi</span>
+<span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">n_gramme_result</span><span style="color: #61bfff;">[</span>101<span style="color: #61bfff;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">N-gramme du r&#233;sultat que l'on &#233;tudit</span>
+
+<span style="color: #50fa7b; font-weight: bold;">separe_mots</span><span style="color: #61bfff;">(</span>s, result, &amp;nb_mots_result<span style="color: #61bfff;">)</span>;
+
+</pre>
+</div>
+
+<p>
+Ensuite, tant que la longueur de notre résultat
+est inférieure à la longueur de la phrase voulue,
+on recompose un n-gramme à partir des données du tableau <i>text</i>,
+on recherche ce n-gramme dans la chaîne de markov <i>chaines</i>,
+on choisit un mot au "hasard" et on l'ajoute au résultat.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="orgccbe105">
+<span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #61bfff;">(</span>nb_mots_result &lt; l<span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Tant que l'on n'a a pas la bonne longueur</span>
+    sprintf<span style="color: #ff79c6;">(</span>n_gramme_result, <span style="color: #f1fa8c; font-style: italic;">""</span><span style="color: #ff79c6;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On initialise le texte du n-gramme</span>
+
+    <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On recompose le n-gramme &#224; partir des donn&#233;es du tableau contenant la phrase compl&#232;te</span>
+    <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span>i = nb_mots_result-d; i &lt; nb_mots_result; ++i<span style="color: #ff79c6;">){</span>
+        strcat<span style="color: #50fa7b;">(</span>n_gramme_result, result<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span><span style="color: #50fa7b;">)</span>;
+        <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>i &lt; nb_mots_result-1<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span>
+            strcat<span style="color: #bd93f9;">(</span>n_gramme_result, <span style="color: #f1fa8c; font-style: italic;">" "</span><span style="color: #bd93f9;">)</span>;
+        <span style="color: #50fa7b;">}</span>
+    <span style="color: #ff79c6;">}</span>
+
+    mk = 0;
+    <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span>strcmp<span style="color: #50fa7b;">(</span>n_gramme_result, chaines<span style="color: #bd93f9;">[</span>mk<span style="color: #bd93f9;">]</span>.ngram<span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On parcourt le tableau tant que l'on a pas trouv&#233; le bon n-gramme</span>
+        ++mk;
+    <span style="color: #ff79c6;">}</span>
+
+    ind_aleatoire = pick_option_index<span style="color: #ff79c6;">(</span>chaines<span style="color: #50fa7b;">[</span>mk<span style="color: #50fa7b;">]</span>.number_chains<span style="color: #ff79c6;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On choisit un indice al&#233;atoire</span>
+    strcpy<span style="color: #ff79c6;">(</span>result<span style="color: #50fa7b;">[</span>nb_mots_result<span style="color: #50fa7b;">]</span>, chaines<span style="color: #50fa7b;">[</span>mk<span style="color: #50fa7b;">]</span>.chain<span style="color: #50fa7b;">[</span>ind_aleatoire<span style="color: #50fa7b;">]</span><span style="color: #ff79c6;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On ajoute le mot trouv&#233; dans la phrase finale</span>
+    nb_mots_result += 1;
+<span style="color: #61bfff;">}</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc336085" class="outline-3">
+<h3 id="orgc336085"><span class="section-number-3">2.4</span> Ecrire la phrase</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+On recompose la phrase finale à partir du tableau <i>resultat</i>,
+puis on l'affiche.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="org9fe6f2e">
+<span style="color: #50fa7b; font-weight: bold;">sprintf</span><span style="color: #61bfff;">(</span>s, <span style="color: #f1fa8c; font-style: italic;">""</span><span style="color: #61bfff;">)</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On initialise la phrase finale</span>
+
+<span style="color: #6272a4;">// </span><span style="color: #6272a4;">On recompose la phrase finale &#224; partir des donn&#233;es du tableau</span>
+<span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #61bfff;">(</span>i = 0; i &lt; nb_mots_result; ++i<span style="color: #61bfff;">){</span>
+    strcat<span style="color: #ff79c6;">(</span>s, result<span style="color: #50fa7b;">[</span>i<span style="color: #50fa7b;">]</span><span style="color: #ff79c6;">)</span>;
+    <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #ff79c6;">(</span>i &lt; nb_mots_result-1<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+        strcat<span style="color: #50fa7b;">(</span>s, <span style="color: #f1fa8c; font-style: italic;">" "</span><span style="color: #50fa7b;">)</span>;
+    <span style="color: #ff79c6;">}</span>
+<span style="color: #61bfff;">}</span>
+
+printf<span style="color: #61bfff;">(</span><span style="color: #f1fa8c; font-style: italic;">"%s\n"</span>, s<span style="color: #61bfff;">)</span>;
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1808359" class="outline-3">
+<h3 id="org1808359"><span class="section-number-3">2.5</span> Plan du programme final</h3>
+<div class="outline-text-3" id="text-2-5">
+<div class="org-src-container">
+<pre class="src src-C" id="org7cd54af">
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdlib.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdio.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">string.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+
+&lt;&lt;struct_markov&gt;&gt;
+
+&lt;&lt;func_aleatoire&gt;&gt;
+&lt;&lt;func_separe_mots&gt;&gt;
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> main<span style="color: #61bfff;">()</span> <span style="color: #61bfff;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">t</span><span style="color: #ff79c6;">[</span>1001<span style="color: #ff79c6;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Phrase compl&#232;te</span>
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%[^\n]"</span>, t<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">d</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Taille du n-gramme</span>
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;d<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">l</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Longueur de la phrase finale</span>
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;l<span style="color: #ff79c6;">)</span>; fgetc<span style="color: #ff79c6;">(</span>stdin<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">s</span><span style="color: #ff79c6;">[</span>1001<span style="color: #ff79c6;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Texte de d&#233;part</span>
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%[^\n]"</span>, s<span style="color: #ff79c6;">)</span>;
+
+    &lt;&lt;separe_mots_phrase_complete&gt;&gt;
+
+    &lt;&lt;creer_markov&gt;&gt;
+
+    &lt;&lt;separe_mots_resultat&gt;&gt;
+    &lt;&lt;choisir_mots_aleatoires&gt;&gt;
+
+    &lt;&lt;ecrire_phrase&gt;&gt;
+
+    <span style="color: #ff79c6; font-weight: bold;">return</span> 0;
+<span style="color: #61bfff;">}</span>
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcd291c6" class="outline-2">
+<h2 id="orgcd291c6"><span class="section-number-2">3</span> Tests</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+
+<div id="outline-container-org47ebd2b" class="outline-3">
+<h3 id="org47ebd2b"><span class="section-number-3">3.1</span> Test 1</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Entrée :
+</p>
+<p>
+one fish is good and no fish is bad and that is it
+2
+4
+fish is
+</p>
+
+<p>
+Sortie attendue :
+</p>
+<p>
+fish is bad and
+</p>
+
+<pre class="example">
+Test réussi
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org509d829" class="outline-3">
+<h3 id="org509d829"><span class="section-number-3">3.2</span> Test 2</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Entrée :
+</p>
+<p>
+one fish is good and no fish is bad and that is it
+1
+4
+one
+</p>
+
+<p>
+Sortie attendue :
+</p>
+<p>
+one fish is good
+</p>
+
+<pre class="example">
+Test réussi
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge8d50bd" class="outline-3">
+<h3 id="orge8d50bd"><span class="section-number-3">3.3</span> Test 3</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Entrée :
+</p>
+<p>
+stop there once was a girl named dorothy stop dorothy had a dog named toto stop dorothy lived with her aunt and uncle with her dog named toto stop she was a girl of who dreamed of traveling stop
+2
+10
+dorothy was a
+</p>
+
+<p>
+Sortie attendue :
+</p>
+<p>
+dorothy was a girl named dorothy stop dorothy had a
+</p>
+
+<pre class="example">
+Test réussi
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgf89dba4" class="outline-3">
+<h3 id="orgf89dba4"><span class="section-number-3">3.4</span> Test 4</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Entrée :
+</p>
+<p>
+stop there once was a girl named dorothy stop dorothy had a dog named toto stop dorothy lived with her aunt and uncle with her dog named toto stop she was a girl of who dreamed of traveling stop
+3
+10
+stop dorothy had
+</p>
+
+<p>
+Sortie attendue :
+</p>
+<p>
+stop dorothy had a dog named toto stop dorothy lived
+</p>
+
+<pre class="example">
+Test réussi
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbe6476f" class="outline-2">
+<h2 id="orgbe6476f"><span class="section-number-2">4</span> Description d'une autre solution</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Cette solution a été proposée sur CodinGame par l'utilisateur "Vane26" : 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C">
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdlib.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdio.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">string.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdbool.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #50fa7b; font-weight: bold;">choisir_option</span><span style="color: #61bfff;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">num</span>,<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nd_option</span><span style="color: #61bfff;">){</span>
+    <span style="color: #ff79c6; font-weight: bold;">return</span> num%nd_option;
+<span style="color: #61bfff;">}</span>
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #50fa7b; font-weight: bold;">nombre_mot_chaine</span><span style="color: #61bfff;">(</span><span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">chaine</span><span style="color: #ff79c6;">[]</span><span style="color: #61bfff;">){</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb</span>=1;
+    <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span>i=0;i&lt;strlen<span style="color: #50fa7b;">(</span>chaine<span style="color: #50fa7b;">)</span>;i++<span style="color: #ff79c6;">){</span>
+        <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>chaine<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span>==<span style="color: #f1fa8c; font-style: italic;">' '</span><span style="color: #50fa7b;">){</span>
+            nb++;
+        <span style="color: #50fa7b;">}</span>
+    <span style="color: #ff79c6;">}</span>
+    <span style="color: #ff79c6; font-weight: bold;">return</span> nb;
+<span style="color: #61bfff;">}</span>
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #50fa7b; font-weight: bold;">main</span><span style="color: #61bfff;">(){</span>
+    <span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">t</span><span style="color: #ff79c6;">[</span>1001<span style="color: #ff79c6;">]</span>;
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%[^\n]"</span>, t<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">d</span>;
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;d<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">l</span>;
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;l<span style="color: #ff79c6;">)</span>; fgetc<span style="color: #ff79c6;">(</span>stdin<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">char</span> <span style="color: #ffc9e8;">s</span><span style="color: #ff79c6;">[</span>1001<span style="color: #ff79c6;">]</span>;
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%[^\n]"</span>, s<span style="color: #ff79c6;">)</span>;
+
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>=1;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">j</span>=1;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_source</span>=nombre_mot_chaine<span style="color: #ff79c6;">(</span>s<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_phrase</span>=nombre_mot_chaine<span style="color: #ff79c6;">(</span>t<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">char</span> *<span style="color: #ffc9e8;">mot</span><span style="color: #ff79c6;">[</span>500<span style="color: #ff79c6;">]</span>;
+    mot<span style="color: #ff79c6;">[</span>0<span style="color: #ff79c6;">]</span>=strtok<span style="color: #ff79c6;">(</span>t,<span style="color: #f1fa8c; font-style: italic;">" "</span><span style="color: #ff79c6;">)</span>;    
+    <span style="color: #ff79c6; font-weight: bold;">while</span><span style="color: #ff79c6;">(</span>mot<span style="color: #50fa7b;">[</span>i<span style="color: #50fa7b;">]</span>!=<span style="color: #8be9fd;">NULL</span> || i==1<span style="color: #ff79c6;">){</span>        <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On d&#233;compose en mot le texte</span>
+        mot<span style="color: #50fa7b;">[</span>i<span style="color: #50fa7b;">]</span>=strtok<span style="color: #50fa7b;">(</span><span style="color: #8be9fd;">NULL</span>,<span style="color: #f1fa8c; font-style: italic;">" "</span><span style="color: #50fa7b;">)</span>;
+        i++;
+    <span style="color: #ff79c6;">}</span>
+
+    <span style="color: #bd93f9; font-weight: bold;">char</span> *<span style="color: #ffc9e8;">n_gramm</span><span style="color: #ff79c6;">[</span>nb_phrase<span style="color: #ff79c6;">][</span>10<span style="color: #ff79c6;">]</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">On d&#233;finit le n_gramm</span>
+    <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span>i=0;i&lt;<span style="color: #50fa7b;">(</span>nb_phrase-d<span style="color: #50fa7b;">)</span>;i++<span style="color: #ff79c6;">){</span>
+        <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #50fa7b;">(</span>j=0;j&lt;d+1;j++<span style="color: #50fa7b;">){</span>
+            n_gramm<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">][</span>j<span style="color: #bd93f9;">]</span>=mot<span style="color: #bd93f9;">[</span>j+i<span style="color: #bd93f9;">]</span>;
+        <span style="color: #50fa7b;">}</span>
+    <span style="color: #ff79c6;">}</span>   
+
+    printf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%s "</span>,s<span style="color: #ff79c6;">)</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">z</span>=1;
+    <span style="color: #bd93f9; font-weight: bold;">char</span> *<span style="color: #ffc9e8;">mot_cible</span><span style="color: #ff79c6;">[</span>nb_source<span style="color: #ff79c6;">]</span>;
+    mot_cible<span style="color: #ff79c6;">[</span>0<span style="color: #ff79c6;">]</span>=strtok<span style="color: #ff79c6;">(</span>s,<span style="color: #f1fa8c; font-style: italic;">" "</span><span style="color: #ff79c6;">)</span>;
+
+    <span style="color: #ff79c6; font-weight: bold;">while</span><span style="color: #ff79c6;">(</span>z!=nb_source &amp;&amp; nb_source!=1<span style="color: #ff79c6;">){</span>
+        mot_cible<span style="color: #50fa7b;">[</span>z<span style="color: #50fa7b;">]</span>=strtok<span style="color: #50fa7b;">(</span><span style="color: #8be9fd;">NULL</span>,<span style="color: #f1fa8c; font-style: italic;">" "</span><span style="color: #50fa7b;">)</span>;
+        z++;
+    <span style="color: #ff79c6;">}</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">mot_phrase</span>=nb_source;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">deb_source</span>=nb_source-d;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">correlation</span>=0;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">random_seed</span>=0;
+
+    <span style="color: #ff79c6; font-weight: bold;">while</span><span style="color: #ff79c6;">(</span>mot_phrase!=l<span style="color: #ff79c6;">){</span> <span style="color: #6272a4;">//</span><span style="color: #6272a4;">affichage des textes</span>
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">affiche</span>=0;
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_option</span>=0;
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">option</span><span style="color: #50fa7b;">[</span>100<span style="color: #50fa7b;">]</span>=<span style="color: #50fa7b;">{</span>0<span style="color: #50fa7b;">}</span>;
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">last_seed</span>=0;
+        <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #50fa7b;">(</span>i=0;i&lt;<span style="color: #bd93f9;">(</span>nb_phrase-d<span style="color: #bd93f9;">)</span>;i++<span style="color: #50fa7b;">){</span>
+            <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #bd93f9;">(</span>j=0;j&lt;d;j++<span style="color: #bd93f9;">){</span>
+                <span style="color: #ff79c6; font-weight: bold;">if</span><span style="color: #0189cc;">(</span>*n_gramm<span style="color: #61bfff;">[</span>i<span style="color: #61bfff;">][</span>j<span style="color: #61bfff;">]</span>==*mot_cible<span style="color: #61bfff;">[</span>j+deb_source<span style="color: #61bfff;">]</span><span style="color: #0189cc;">){</span>                    
+                    correlation++;
+                <span style="color: #0189cc;">}</span>
+            <span style="color: #bd93f9;">}</span>             
+            <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #bd93f9;">(</span>correlation==d<span style="color: #bd93f9;">){</span>
+                option<span style="color: #0189cc;">[</span>nb_option<span style="color: #0189cc;">]</span>=i;
+                last_seed=i+1;
+                nb_option++;               
+            <span style="color: #bd93f9;">}</span>
+            correlation=0;   
+        <span style="color: #50fa7b;">}</span>
+        mot_phrase++;
+        random_seed+=7;
+        affiche=option<span style="color: #50fa7b;">[</span>choisir_option<span style="color: #bd93f9;">(</span>random_seed,nb_option<span style="color: #bd93f9;">)</span><span style="color: #50fa7b;">]</span>; 
+
+        <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>mot_phrase==l<span style="color: #50fa7b;">){</span>
+            printf<span style="color: #bd93f9;">(</span><span style="color: #f1fa8c; font-style: italic;">"%s"</span>,n_gramm<span style="color: #0189cc;">[</span>affiche<span style="color: #0189cc;">][</span>d<span style="color: #0189cc;">]</span><span style="color: #bd93f9;">)</span>;
+        <span style="color: #50fa7b;">}</span>
+        <span style="color: #ff79c6; font-weight: bold;">else</span><span style="color: #50fa7b;">{</span>
+            printf<span style="color: #bd93f9;">(</span><span style="color: #f1fa8c; font-style: italic;">"%s "</span>,n_gramm<span style="color: #0189cc;">[</span>affiche<span style="color: #0189cc;">][</span>d<span style="color: #0189cc;">]</span><span style="color: #bd93f9;">)</span>;
+        <span style="color: #50fa7b;">}</span>
+        <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #50fa7b;">(</span>i=0;i&lt;d;i++<span style="color: #50fa7b;">){</span>
+            mot_cible<span style="color: #bd93f9;">[</span>i+deb_source<span style="color: #bd93f9;">]</span>=n_gramm<span style="color: #bd93f9;">[</span>affiche<span style="color: #bd93f9;">][</span>i+1<span style="color: #bd93f9;">]</span>;
+        <span style="color: #50fa7b;">}</span>
+
+    <span style="color: #ff79c6;">}</span>
+    <span style="color: #ff79c6; font-weight: bold;">return</span> 0;
+<span style="color: #61bfff;">}</span>
+
+</pre>
+</div>
+
+<p>
+Cette solution a un fonctionnement similaire à la mienne.
+On commence par découper le texte en mots,
+puis on définit le n-gramme et on parcourt le texte.
+Cependant, celle-ci semble calculer la chaîne de Markov
+au fur et à mesure des n-grammes,
+au lieu de la calculer entièrement comme dans la mienne.
+</p>
+
+<p>
+Ainsi, elle a plusieurs avantages :
+</p>
+<ul class="org-ul">
+<li>Le code est plus compact (97 lignes contre 141 pour la mienne).</li>
+<li>La fonction <i>strtok</i> de la bibliothèque &lt;string.h&gt; permet d'éviter de créer
+une fonction annexe pour séparer les mots d'un texte.</li>
+<li>Elle est plus efficace : on évite de calculer des éléments inutiles car on
+calcule la chaîne de Markov au fur et à mesure.</li>
+</ul>
+
+<p>
+Cependant, je trouve que le code manque de commentaires
+permettant d'expliquer son fonctionnement.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2030753" class="outline-2">
+<h2 id="org2030753"><span class="section-number-2">5</span> Conclusion</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Pour conclure, j'ai trouvé cet exercice beaucoup plus difficile que les
+précédents.
+En effet, la gestion des tableaux et des chaînes de caractères est
+assez rudimentaire en C et il faut souvent faire preuve d'astuce pour effectuer
+des opérations "complexes" comme séparer les éléments d'une chaîne de caractères
+selon un caractère précis.
+Selon moi, cet exercice aurait été plus simple dans un langage comme Python
+où le type des variables est plus "souple"
+et où de nombreuses fonctions de traitement des listes sont intégrées.
+</p>
+
+<p>
+Au delà de ces difficultés, j'ai pu apprendre à mieux gérer les chaînes de
+caractères en C et découvrir des fonctions comme <i>strtok</i> qui n'ont pas été
+abordées en cours.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 15/03/2022</p>
+<p class="author">Auteur: Valentin PORTAIL</p>
+<p class="date">Created: 2022-03-14 lun. 14:04</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

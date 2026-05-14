@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Ghost Legs : Réflexion sur un exercice de Codingame</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="ghost_legs.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Ghost Legs : Réflexion sur un exercice de Codingame</h1>
+</header>
+<header>
+<p>PORTAIL Valentin - Prép’ISIMA 1 - 2021/2022</p>
+<p><img src="images/logo_uca.png" alt="Logo de l’UCA" /> <img src="images/logo_isima.png" alt="Logo de l’ISIMA - Clermont Auvergne INP" /></p>
+<p><a href="https://perso.isima.fr/~vaportail/ghost_legs.html">Lien vers la page Web</a></p>
+<figure>
+<img src="images/ghost_leg.jpg" alt="" /><figcaption>Image d’un amidakuji dans une garderie</figcaption>
+</figure>
+</header>
+<hr />
+<h2 id="introduction-du-problème">Introduction du problème</h2>
+<p>Cet exercice s’inspire d’un jeu de loterie asiatique, l’<em>Amidakuji</em>. Il se joue sur une grille composé de plusieurs lignes verticales, appelées colonnes dans le reste de ce rapport, connectées entre elles par plusieurs lignes horizontales. Il est impossible de mettre deux lignes horizontales l’une en face de l’autre.</p>
+<p>La grille ci-dessous est reprise de l’énoncé de Codingame :</p>
+<pre><code>A  B  C
+|  |  |
+|--|  |
+|  |--|
+|  |--|
+|  |  |
+1  2  3</code></pre>
+<p>Pour jouer, on commence par choisir une valeur de départ en haut de la grille, puis on suit la ligne verticale correspondante de haut en bas. Si on croise une ligne horizontale, il faut la suivre. On arrive donc sur une autre ligne verticale que l’on suit et ainsi de suite.</p>
+<p>A la fin, on tombe sur une des trois valeurs d’arrivée en bas de la grille.</p>
+<p>Par exemple, si on choisit la ligne A, on tombe sur la valeur 2, si on choisit la ligne B, on tombe sur la ligne 1 et si on choisit la ligne C, on tombe sur la ligne 3.</p>
+<p>Chaque valeur de départ est toujours liée à une unique valeur d’arrivée en bas de la grille.</p>
+<p>L’objectif de l’exercice est de trouver les différentes paires de valeurs, puis de donner la liste de toutes ces paires.</p>
+<p>Le programme prend en entrée la grille de jeu écrite en caractères ASCII, sa hauteur et sa largeur. Ces deux dernières valeurs doivent être comprises entre 3 et 100.</p>
+<p>Chaque paire doit être donnée sous la forme d’une chaîne de caractères de type “DA”, où D est la valeur de départ et A la valeur d’arrivée. Les paires seront séparées par des retours à la ligne.</p>
+<h2 id="méthode-de-résolution">Méthode de résolution</h2>
+<h3 id="description-synoptique">Description synoptique</h3>
+<p>L’idée de ma méthode de résolution est de parcourir la grille pour chaque valeur de départ, noter la valeur d’arrivée, puis afficher le couple de valeurs.</p>
+<p>Pour parcourir la grille, il faut que l’algorithme puisse “descendre” la grille en empruntant les lignes horizontales lorsqu’il y en a.</p>
+<h3 id="détail-algorithmique">Détail algorithmique</h3>
+<blockquote>
+<p><strong>Remarque 1 :</strong> Afin d’être fidèle aux éléments déjà donnés par Codingame, le nom des fonctions et des variables seront en anglais. Les commentaires du programme seront, en revanche, en français.</p>
+</blockquote>
+<p>Le programme commence par demander à l’utilisateur la largeur de la grille, notée <em>W</em> (<em>width</em> en anglais), sa hauteur, notée <em>H</em> (<em>height</em> en anglais), puis lui demande la grille complète sous forme de caractères ASCII.</p>
+<p>Pour cela, on demande à l’utilisateur autant de fois que la hauteur de la grille une ligne qui est stockée dans une chaîne de caractères appelée <em>line</em>.</p>
+<p>Cette partie a déjà été préprogrammée par Codingame, mais elle a été légèrement modifiée. En effet, la grille, écrite en caractères ASCII, est, de plus, stockée dans un tableau à deux dimensions appelé <em>diam</em>.</p>
+<p>Ce tableau a une taille de 101 par 101 pour pouvoir couvrir tous les cas possibles. On parcourt chaque ligne et on insère chaque caractère dans la tableau au bon emplacement.</p>
+<blockquote>
+<p><strong>Remarque 2 :</strong> Pour la suite de l’algorithme, on remarque que chaque ligne verticale dans la grille est séparée de trois caractères.</p>
+</blockquote>
+<p>Une fonction appelée <em>next_line</em> permet de parcourir la grille. Elle prend en argument une ligne de la grille nommée <em>line</em>, la largeur de la ligne <em>width</em> et le numéro de la colonne <em>column</em> qui va de 0 à <em>width</em>. Elle renvoie le numéro de la colonne où l’on doit se trouver sur la colonne suivante :</p>
+<ul>
+<li><p>Si elle détecte un “-” directement à gauche de la position actuelle et si l’on ne sort pas de la grille (donc si <em>column</em> - 3 est supérieur ou égal à 0), elle se déplace de trois caractères à gauche et renvoie la nouvelle position.</p></li>
+<li><p>Sinon, si elle détecte un “-” directement à droite de la position actuelle et si l’on ne sort pas de la grille (donc si <em>column</em> + 3 est inférieur à <em>width</em>), elle se déplace de trois caractères à droite et renvoie la nouvelle position.</p></li>
+<li><p>Sinon, elle renvoie la position actuelle.</p></li>
+</ul>
+<p>Le programme parcourt ensuite la grille pour chaque colonne, c’est-à-dire, pour un entier <em>c</em> compris entre 0 et <em>W</em> avec un pas de 3 (cf. Remarque 2).</p>
+<p>Pour chaque colonne, il stocke la valeur initiale, qui se trouve à la ligne 0 et à la colonne <em>c</em>, dans une variable <em>start</em>. Pour éviter de modifier la variable <em>c</em>, il copie son contenu dans une variable <em>col</em>.</p>
+<p>Il parcourt ensuite la grille pour chaque ligne, sauf la dernière, donc pour une variable <em>l</em> allant de 0 à <em>H</em>-1 avec un pas de 1, en se servant de la fonction <em>next_line</em> pour trouver le nouvel indice de colonne qu’il stocke dans la variable <em>col</em>.</p>
+<p>A la fin, il stocke la valeur d’arrivée, qui se trouve à la ligne <em>H</em> - 1 et à la colonne <em>col</em>, dans une variable <em>end</em>. Il affiche ensuite la paire composée de <em>start</em> et de <em>end</em>.</p>
+<h2 id="code-commenté-de-la-résolution">Code commenté de la résolution</h2>
+<p>Voici le programme proposé, écrit en langage C :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;stdbool.h&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="dt">int</span> next_line(<span class="dt">char</span> line[], <span class="dt">int</span> width, <span class="dt">int</span> column) {</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>    <span class="cf">if</span> (column - <span class="dv">1</span> &gt;= <span class="dv">0</span> &amp;&amp; line[column-<span class="dv">1</span>] == <span class="ch">&#39;-&#39;</span>) {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>    <span class="co">// S&#39;il y a un chemin à gauche et si on ne sort pas de la grille</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>        <span class="cf">return</span> column - <span class="dv">3</span>; <span class="co">// On va 3 caractères à gauche</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>    } <span class="cf">else</span> <span class="cf">if</span> (column + <span class="dv">1</span> &lt; width &amp;&amp; line[column+<span class="dv">1</span>] == <span class="ch">&#39;-&#39;</span>) {</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>    <span class="co">// S&#39;il y a un chemin à droite et si on ne sort pas de la grille</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>        <span class="cf">return</span> column + <span class="dv">3</span>; <span class="co">// On va 3 caractères à droite</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>        <span class="cf">return</span> column; <span class="co">// On reste au même endroit</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>    }</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a>}</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a><span class="dt">int</span> main()</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a>{</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true"></a>    <span class="co">/* Saisie de la grille par Codingame */</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true"></a>    <span class="dt">int</span> W;</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true"></a>    <span class="dt">int</span> H;</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true"></a>    scanf(<span class="st">&quot;%d%d&quot;</span>, &amp;W, &amp;H); fgetc(stdin);</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true"></a>    <span class="dt">char</span> diag[<span class="dv">101</span>][<span class="dv">101</span>]; <span class="co">// On crée un tableau à 2 dimensions</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; H; ++i) {</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true"></a>        <span class="dt">char</span> line[<span class="dv">1025</span>];</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true"></a>        scanf(<span class="st">&quot;%[^</span><span class="sc">\n</span><span class="st">]&quot;</span>, line); fgetc(stdin);</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true"></a>        <span class="co">// On enregistre la ligne saisie par l&#39;utilisateur</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; W; ++j) {</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true"></a>            diag[i][j] = line[j]; <span class="co">// On stocke les valeurs dans le tableau</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true"></a>        }</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true"></a>    }</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true"></a>    <span class="co">/* Afficher la grille (pour tester, non pris en compte dans l&#39;évaluation) */</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; H; i++) {</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true"></a>        fprintf(stderr, <span class="st">&quot;%s</span><span class="sc">\n</span><span class="st">&quot;</span>, diag[i]);</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true"></a>    }</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true"></a>    <span class="co">/* Parcourir la grille, colonne après colonne */</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true"></a>    <span class="cf">for</span> (<span class="dt">int</span> c = <span class="dv">0</span>; c &lt; W; c+=<span class="dv">3</span>) { <span class="co">// Pour chaque colonne</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true"></a>        <span class="dt">int</span> col = c;</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true"></a>        <span class="dt">char</span> start = diag[<span class="dv">0</span>][col]; <span class="co">// On stocke la valeur de départ</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true"></a>        <span class="cf">for</span> (<span class="dt">int</span> l = <span class="dv">0</span>; l &lt; H-<span class="dv">1</span>; ++l) { <span class="co">// Pour chaque ligne sauf la dernière</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true"></a>            col = next_line(diag[l], W, col); <span class="co">// On parcourt la grille</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true"></a>        }</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true"></a>        <span class="dt">char</span> end = diag[H-<span class="dv">1</span>][col]; <span class="co">// On stocke la valeur d&#39;arrivée</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true"></a>        printf(<span class="st">&quot;%c%c</span><span class="sc">\n</span><span class="st">&quot;</span>, start, end); <span class="co">// On affiche la paire de valeurs</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true"></a>    }</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true"></a>}</span></code></pre></div>
+<h2 id="description-dune-autre-solution">Description d’une autre solution</h2>
+<p>Cette solution a été proposée sur Codingame par l’utilisateur “VE_FORBRYDERNE” :</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="dt">char</span> g[<span class="dv">102</span>][<span class="dv">102</span>];</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="dt">int</span> w, h;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="dt">int</span> i, r, c;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="dt">char</span> x;</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="dt">int</span> main(<span class="dt">void</span>) {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>    <span class="co">/* Read first line */</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>    scanf(<span class="st">&quot;%d%d</span><span class="sc">\n</span><span class="st">&quot;</span>, &amp;w, &amp;h);</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>    <span class="co">/* Read rest of input */</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>    <span class="cf">for</span> (i = <span class="dv">0</span>; i &lt; h; i++)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a>        fgets(g[i], <span class="dv">102</span>, stdin);</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a>    <span class="cf">for</span> (i = <span class="dv">0</span>; i &lt; w; i += <span class="dv">3</span>) {</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a>        r = <span class="dv">1</span>;</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a>        c = i;</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a>        x = g[<span class="dv">0</span>][i];</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true"></a>        <span class="cf">while</span> (r &lt; h-<span class="dv">1</span>) {</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true"></a>            <span class="co">/* Move left */</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true"></a>            <span class="cf">if</span> (c &amp;&amp; g[r][c-<span class="dv">1</span>] == <span class="ch">&#39;-&#39;</span>) c -= <span class="dv">3</span>;</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true"></a>            <span class="co">/* Move right */</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true"></a>            <span class="cf">else</span> <span class="cf">if</span> (g[r][c+<span class="dv">1</span>] == <span class="ch">&#39;-&#39;</span>) c += <span class="dv">3</span>;</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true"></a>            r += <span class="dv">1</span>;</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true"></a>        }</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true"></a>        printf(<span class="st">&quot;%c%c</span><span class="sc">\n</span><span class="st">&quot;</span>, x, g[r][c]);</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true"></a>    }</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true"></a>}</span></code></pre></div>
+<p>Cette solution m’a séduit car elle est plutôt compacte : elle occupe en effet 31 lignes contre 57 pour la mienne. Elle reste cependant lisible et plutôt facilement compréhensible.</p>
+<p>Dans cette solution, il n’y a pas de fonction et le changement de colonne se fait directement dans la boucle <em>while</em>. La variable <em>r</em> correspond à la ligne et la variable <em>c</em> à la colonne.</p>
+<p>On peut cependant regretter la présence d’une boucle <em>while</em> au lieu d’une boucle <em>for</em>, ce qui aurait pu permettre de réduire davantage la taille du code, ainsi que l’absence d’accolades autour de certaines boucles ne contenant qu’une seule instruction (ce qui n’est pas une erreur, le programme s’exécutant quand même).</p>
+<h2 id="bilan-des-apprentissages">Bilan des apprentissages</h2>
+<p>Lors de cet exercice, j’ai pu apprendre à :</p>
+<ul>
+<li>manier les <strong>tableaux</strong> et les <strong>chaînes de caractères</strong>, que je n’avais pas encore vus en C.</li>
+<li>chercher des <strong>informations supplémentaires</strong> en cas de difficultés.</li>
+<li><strong>décomposer</strong> un problème complexe en plusieurs <strong>problèmes simples</strong>.</li>
+<li><strong>comparer</strong> ma solution à celles <strong>d’autres personnes</strong> afin d’en tirer des améliorations potentielles.</li>
+</ul>
+</body>
+</html>

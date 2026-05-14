@@ -1,0 +1,382 @@
+/* Importation de la police */
+
+@font-face {
+    font-family: "IBM Plex Sans", sans-serif;
+    src:
+        url("fonts/IBMPlexSans-VariableFont_wdth,wght.ttf") format("truetype-variations");
+        url("fonts/IBMPlexSans-Italic-VariableFont_wdth,wght.ttf") format("truetype-variations"),
+    font-weight: 100 900;
+}
+
+/* Mode clair / sombre */
+
+@media (prefers-color-scheme: light) {
+    .external {
+        background-image: url("icons/external_link_dark.svg");
+    }
+
+    body, .projet {
+        background-color: #f4f4f4;
+    }
+
+    .contenu, .sous-projet {
+        background-color: white;
+    }
+
+    .logo a {
+        color: black;
+    }
+
+    h1, h2, h3, p, li {
+        color: black;
+    }
+
+    .links a, .competences li {
+        background-color: #d9d9d9;
+        color: black;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .external {
+        background-image: url("icons/external_link_light.svg");
+    }
+
+    body, .projet {
+        background-color: black;
+    }
+
+    .contenu, .sous-projet {
+        background-color: #303030;
+    }
+
+    .logo a {
+        color: white;
+    }
+
+    h1, h2, h3, p, li {
+        color: white;
+    }
+
+    .links a, .competences li {
+        background-color: #505050;
+        color: white;
+    }
+}
+
+/* Textes */
+
+* {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12pt;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 22pt;
+}
+
+h2 {
+    font-size: 18pt;
+}
+
+h3 {
+    font-size: 14pt;
+}
+
+em {
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* En-tête */
+
+header {
+    margin: 1em;
+    transition-duration: 0.25s;
+}
+
+.logo {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    column-gap: 8pt;
+}
+
+.logo img {
+    align-content: center;
+    height: 50px;
+}
+
+.logo a {
+    font-weight: bolder;
+    font-size: 22pt;
+    text-decoration: none;
+    text-align: center;
+    transition-duration: 0.25s;
+}
+
+.logo a:hover {
+    color: #ff6a00;
+    border-bottom: 0.2em solid #ff6a00;
+    border-radius: 0.2em;
+}
+
+/* Corps */
+
+body {
+    margin: 0;
+}
+
+.contenu {
+    border-radius: 1.5em;
+    margin: 0;
+    padding: 1.5em;
+    transition-duration: 0.25s;
+}
+
+.contenu ul {
+    list-style-type: square;
+    padding-left: 1em;
+}
+
+.contenu li p{
+    margin: 0.5em 0;
+}
+
+.bloc {
+    display: flow-root;
+}
+
+/* Titres de section */
+
+h2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.circle {
+    display: inline-block;
+    background-color: #ff6a00;
+    border-radius: 50%;
+    height: 18pt;
+    width: 18pt;
+    margin-right: 9pt;
+}
+
+/* Illustrations */
+
+.illus, .illus-maxi {
+    text-align: center;
+}
+
+.illus-mini {
+    text-align: left;
+    transition-duration: 0.25s;
+}
+
+.illus img, .illus-maxi img {
+    height: 150px;
+    transition-duration: 0.25s;
+}
+
+.illus-mini img {
+    height: 80px;
+    transition-duration: 0.25s;
+}
+
+/* Attention */
+
+.attention {
+    display: flow-root;
+    background-color: #ff6a00;
+    border-radius: 1.5em;
+}
+
+.attention p {
+    color: white;
+    font-weight: bold;
+    padding-inline: 1em;
+}
+
+/* Compétences */
+
+.competences {
+    display: flex;
+    flex-flow: wrap;
+    gap: 0.25em;
+}
+
+.competences li {
+    list-style-type: none;
+    border-radius: 1.5em;
+    padding: 0.5em 0.5em;
+}
+
+/* Formation & Activités */
+
+.date {
+    color: #ff6a00;
+    font-weight: bolder;
+    font-size: 2em;
+}
+
+.formation {
+    font-weight: bolder;
+}
+
+.ecole {
+    font-style: italic;
+}
+
+.description li {
+    margin: 0.5em 0;
+}
+
+/* Cartes */
+
+.projets {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+    transition-duration: 0.25s;
+}
+
+.projet, .sous-projet {
+    border-radius: 1.5em;
+    padding: 0.5em 1em;
+}
+
+.titre-projet {
+    font-weight: bold;
+    font-size: 14pt;
+}
+
+.sous-projets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.sous-projet {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.sous-projet .links {
+    flex-wrap: nowrap;
+}
+
+.sous-titre-projet {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 12pt;
+}
+
+/* Liens */
+
+a {
+    color: #ff6a00;
+}
+
+ul.links {
+    padding-left: 0;
+    display: flex;
+    flex-flow: wrap;
+    gap: 1.5em 0.5em;
+    margin: 1.5em 0;
+}
+
+.links li {
+    list-style-type: none;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.links a {
+    padding: 0.5em 0.75em;
+    border-radius: 1.5em;
+    text-decoration-line: none;
+    transition-duration: 0.25s;
+}
+
+.links a .external {
+    display: inline-block;
+    background-size: contain;
+    width: 10pt;
+    height: 10pt;
+    margin-left: 5pt;
+    transition-duration: 0.25s;
+}
+
+.links a:hover {
+    background-color: #ff6a00;
+    color: white;
+}
+
+.links a:hover .external {
+    background-image: url("icons/external_link_light.svg");
+}
+
+/* Pied-de-page */
+
+footer {
+    margin: 1em;
+    transition-duration: 0.25s;
+}
+
+footer img {
+    height: 80px;
+    margin-right: 1.5em;
+}
+
+/* Responsive */
+
+@media screen and (min-width: 600px){
+    .illus-mini img {
+        float: right;
+        margin: 0 1.5em;
+    }
+}
+
+@media screen and (min-width: 800px){
+    header, footer {
+        margin: 2em;
+    }
+
+    .contenu {
+        margin: 2em;
+    }
+
+    .illus img {
+        height: 200px;
+        float: right;
+        margin: 0 1.5em;
+    }
+
+    .projets {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        grid-gap: 1em;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .illus-maxi {
+        position: relative;
+        height: 100%;
+        float: right;
+        margin: 1.5em 0;
+    }
+
+    .illus-maxi img {
+        height: 200px;
+    }
+}

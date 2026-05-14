@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Valentin PORTAIL">
+    <meta name="keywords" content="Mairie, Triskalya ha Plafälda, Aglitanie">
+    <meta name="description" content="Page d'accueil du site de la mairie de Triskalya ha Plafälda">
+
+    <link rel="icon" href="img/blason.png">
+    <link rel="stylesheet" href="style/common.css">
+
+    <title>Accueil - Triskalya ha Plafälda</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#"><img alt="Blason de la commune de Triskalya ha Plafälda" src="img/blason.svg"></a>
+                <p>Mairie de Triskalya ha Plafälda</p>
+            </div>
+
+            <label for="mobile">Afficher / Cacher le menu</label>
+            <input type="checkbox" id="mobile" role="button" aria-pressed="true">
+
+            <ul>
+                <li><a href="mairie.html">La mairie</a></li>
+                <li><a href="vivre.html">Vivre à Triskalya</a></li>
+                <li><a href="enfance-sante.html">Enfance - Santé</a></li>
+                <li><a href="sport-culture.html">Sport - Culture</a></li>
+                <li><a href="triskonline.html">Espace TriskOnline</a></li>
+                <li><a href="triskask.html">Messagerie TriskAsk</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <header>
+            <h1>Bienvenue à Triskalya ha Plafälda !</h1>
+
+            <figure>
+                <img alt="Photographie de la ville de Triskalya ha Plafälda avec la mer Bleue en arrière-plan" src="img/triskalya.jpg">
+                <figcaption>Vue sur Triskalya ha Plafälda depuis la tour Humäls</figcaption>
+            </figure>
+        </header>
+
+        <div class="corps">
+            <div class="contenu">
+                <section>
+                    <h2>Le mot du maire</h2>
+                    <p>Chères Triskalyennes, chers Triskalyens,</p>
+                    <p>
+                        Suite à de nombreuses demandes de citoyens, nous avons décidé de traduire notre site Web en français.
+                        Cela permettra aux nouveaux arrivants de ne pas être déboussolés au moment d’effectuer leurs démarches.
+                        Ce site sera également une vitrine pour notre commune et pour ses nombreuses activités.
+                    </p>
+                    <p>
+                        Située au croisement de la mer Bleue et des montagnes du Dalkitsk, la commune de Triskalya ha Plafälda
+                        s’étend sur 240 km² et abrite l’une des villes majeures du district de Plafälda et de la région de Filtanyë.
+                        Connue par le passé comme port de pêche, la ville vit aujourd’hui essentiellement de l’industrie du textile
+                        et elle exporte principalement vers la capitale, Isfalitë, et vers les autres villes d'Aglitanie.
+                    </p>
+                    <p>
+                        Que vous soyez un nouveau résident souhaitant s’installer dans la commune ou un habitant de longue date,
+                        vous trouverez sur ce site Web l’ensemble des ressources nécessaires pour vivre à Triskalya.
+                        Cela va des renseignements sur les procédures administratives aux comptes-rendus du conseil communal,
+                        en passant par les événements organisés dans la ville et dans son district.
+                    </p>
+                    <p>
+                        Je vous souhaite une bonne et agréable visite sur ce site,
+                        en espérant que vous y trouverez les informations qui vous seront utiles.
+                    </p>
+                    <p><em>B. Halkyrti</em>, maire de Triskalya ha Plafälda</p>
+                </section>
+            </div>
+
+            <aside>
+                <section>
+                    <h2>Accès rapide à TriskOnline</h2>
+
+                    <form id="login-form">
+                        <fieldset>
+                            <label>Nom d'utilisateur : <input type="text" class="form-texte" name="username"></label>
+                            <label>Mot de passe : <input type="password" class="form-texte" name="userpwd"></label>
+
+                            <input class="form-bouton" type="submit" value="Se connecter" name="submit"/>
+                        </fieldset>
+                    </form>
+
+                    <p id="prompt"></p>
+                </section>
+                
+                <script src="script/login.js"></script>
+
+                <section>
+                    <h2>L'agenda</h2>
+                
+                    <ul>
+                        <li><em>27 avril</em> : Festival des Triskalyades - Place de la Fédération</li>
+                        <li><em>3 mai</em> : Elections communales</li>
+                        <li><em>15 mai</em> : Fête de la Fédération Aglitanienne</li>
+                        <li><em>Juin</em> : Mois de la photo - Dans toute la commune</li>
+                    </ul>
+                </section>
+            </aside>
+        </div>
+
+        <footer>
+            <a href="#">Revenir en haut</a>
+        </footer>
+    </main>
+
+    <footer id="contact">
+        <div class="adresse">
+            <p><em>Hôtel de ville</em> - 24 Rue Arladesi</p>
+            <p>300A - TRISKALYA HA PLAFALDA</p>
+        </div>
+
+        <div class="coordonnees">
+            <p><em>Téléphone</em> : <a href="tel:+14589416327">+14 589-416-327</a></p>
+            <p><em>Courriel</em> : <a href="mailto:trishat@triskalya.aa">trishat@triskalya.aa</a></p>
+        </div>
+    </footer>
+</body>

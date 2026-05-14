@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+<!-- 2022-02-13 dim. 17:21 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shadows of the Knight : Une nouvelle réflexion sur un exercice de Codingame</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Valentin PORTAIL" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="shadow_knight.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Shadows of the Knight : Une nouvelle réflexion sur un exercice de Codingame</h1>
+<div class="org-center">
+<p>
+
+</p>
+
+<p>
+Valentin PORTAIL - Prép'ISIMA 1 - 2021/2022
+</p>
+
+<p>
+<img src="./images/logo_uca.png" alt="logo_uca.png" /> <img src="./images/logo_isima.png" alt="logo_isima.png" />
+</p>
+
+<p>
+<a href="https://perso.isima.fr/~vaportail/shadow_knight.html">Lien vers la page Web</a>
+</p>
+
+
+<div class="figure">
+<p><img src="./images/shadow_knight.jpg" alt="shadow_knight.jpg" />
+</p>
+</div>
+
+<p>
+Image d'un objet en forme de chauve-souris planté dans un mur
+</p>
+</div>
+
+<hr />
+
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org31f7ebb">1. Introduction du problème</a></li>
+<li><a href="#orgaedf0c0">2. Méthode de résolution</a>
+<ul>
+<li><a href="#org9b6b455">2.1. Description synoptique</a></li>
+<li><a href="#org5bd7de5">2.2. Détail algorithmique</a></li>
+</ul>
+</li>
+<li><a href="#orgf2e58a2">3. Code commenté de la solution</a></li>
+<li><a href="#org4cdad96">4. Analyse des résultats</a></li>
+<li><a href="#orgbc28738">5. Description d'une autre solution</a></li>
+<li><a href="#orgbbe0362">6. Bilan des apprentissages</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org31f7ebb" class="outline-2">
+<h2 id="org31f7ebb"><span class="section-number-2">1</span> Introduction du problème</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Cet exercice se déroule sur la façade d'un immeuble.
+Chaque fenêtre est indiquée par ses coordonnées, celle en haut à gauche ayant pour coordonnées (0,0).
+</p>
+
+<p>
+L'objectif est de déplacer le personnage, Batman, pour trouver les otages du bâtiment en sautant de fenêtre en fenêtre
+pour trouver la pièce où ils se trouvent et désamorcer les bombes.
+Cependant, il y a un nombre de sauts limité avant qu'elles n'explosent.
+</p>
+
+<p>
+Avant chaque saut, la direction des bombes est indiquée :
+</p>
+
+<ul class="org-ul">
+<li>U (Up) : les bombes sont situées au dessus</li>
+<li>D (Down) : les bombes sont situées en dessous</li>
+<li>L (Left) : les bombes sont situées à gauche</li>
+<li>R (Right) : les bombes sont situées à droite</li>
+<li>UR (Up-Right) : les bombes sont situées au dessus et à droite</li>
+<li>UL (Up-Left) : les bombes sont situées au dessus et à gauche</li>
+<li>DR (Down-Right) : les bombes sont situées en dessous et à droite</li>
+<li>DL (Down-Left) : les bombes sont situées en dessous et à gauche</li>
+</ul>
+
+<p>
+Lors de l'initialisation, le programme prend en argument deux entiers indiquant la largeur et la hauteur du bâtiment en nombre de fenêtres,
+un entier représentant le nombre de sauts maximal et deux entiers indiquant la position de départ.
+</p>
+
+<p>
+Lors d'un tour de jeu, le programme prend en argument la direction vers laquelle se trouve la bombe
+et doit renvoyer deux entiers représentant la position de la fenêtre sur laquelle doit sauter Batman afin d'atteindre les bombes le plus tôt possible.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgaedf0c0" class="outline-2">
+<h2 id="orgaedf0c0"><span class="section-number-2">2</span> Méthode de résolution</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org9b6b455" class="outline-3">
+<h3 id="org9b6b455"><span class="section-number-3">2.1</span> Description synoptique</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Pour résoudre cet exercice, nous allons utiliser la recherche dichotomique,
+qui consiste à diviser la taille de la zone de recherche par 2 à chaque étape.
+</p>
+
+<p>
+Il faut d'abord ignorer les fenêtres qui ne nous intéressent pas (par exemple, celles situées à gauche si les bombes sont à droite).
+Ensuite, on cherche le centre de "la zone de recherche" pour s'y déplacer, puis recommencer avec la nouvelle position.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5bd7de5" class="outline-3">
+<h3 id="org5bd7de5"><span class="section-number-3">2.2</span> Détail algorithmique</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+On commence par initialiser les variables <i>Xmin</i> et <i>Xmax</i>, qui représentent la largeur du bâtiment,
+ainsi que <i>Ymin</i> et <i>Ymax</i>, qui représentent sa hauteur.
+<i>Xmin</i> et <i>Ymin</i> sont initialisées à 0, 
+tandis que les valeurs de <i>Xmax</i> et de <i>Ymax</i> sont demandées à l'utilisateur.
+</p>
+
+<p>
+On demande ensuite à l'utilisateur le nombre maximal de tours avant la fin de la partie, noté <i>N</i>,
+et les positions horizontale et verticale de départ, notées respectivement <i>X0</i> et <i>Y0</i>.
+Pendant tout le programme, elles devront être telles que \(X0 \in [Xmin,Xmax]\) et \(Y0 \in [Ymin,Ymax]\).
+</p>
+
+<p>
+Comme <i>Xmax</i> et <i>Ymax</i> indiquent respectivement la largeur et la hauteur totales du bâtiment,
+on doit leur retrancher 1 pour qu'elles indiquent la plus grande coordonnée possible.
+</p>
+
+<blockquote>
+<p>
+<b>Remarque</b> : On entre ici dans une boucle infinie.
+Les actions décrites ci-dessous seront donc répétées jusqu'à ce que le programme se termine.
+</p>
+</blockquote>
+
+<p>
+On demande à l'utilisateur la direction des bombes dans le format vu ci-dessus
+que l'on va stocker dans une chaîne de caractères appelée <i>bomb_dir</i>.
+Sa taille est de 3 caractères pour pouvoir stocker les deux caractères de la direction et le caractère de fin '\0'.
+</p>
+
+<p>
+Le programme fait ensuite une série de tests afin de réduire la taille du rectangle de recherche.
+</p>
+
+<p>
+Il commence d'abord par l'axe horizontal :
+</p>
+
+<ul class="org-ul">
+<li>S'il y a un 'R' dans la direction de la bombe (à droite), on ignore les cases à gauche.
+<i>X0 + 1</i> devient donc le nouveau <i>Xmin</i>.</li>
+<li>S'il y a un 'L' dans la direction de la bombe (à gauche), on ignore les cases à droite.
+<i>X0 - 1</i> devient donc le nouveau <i>Xmax</i>.</li>
+</ul>
+
+<p>
+Il continue ensuite avec l'axe vertical :
+</p>
+
+<ul class="org-ul">
+<li>S'il y a un 'D' dans la direction de la bombe (en bas), on ignore les cases en haut.
+<i>Y0 + 1</i> devient donc le nouveau <i>Ymin</i>.</li>
+<li>S'il y a un 'U' dans la direction de la bombe (en haut), on ignore les cases en bas.
+<i>Y0 - 1</i> devient donc le nouveau <i>Ymax</i>.</li>
+</ul>
+
+<blockquote>
+<p>
+<b>Remarque</b> : Le fait d'ignorer les cases sur la même colonne (pour l'axe horizontal) ou sur la même ligne (pour l'axe vertical)
+que Batman permet d'optimiser le code.
+En effet, s'il y a deux lettres dans la direction, alors la bombe ne peut pas se trouver directement à gauche, à droite,
+en haut ou en bas
+du personnage. Il n'y aurait alors qu'une lettre si c'était le cas. On peut donc éliminer ces cases.
+</p>
+</blockquote>
+
+<p>
+Le programme calcule ensuite le prochain emplacement où Batman doit sauter.
+Cet emplacement est le centre du rectangle de recherche.
+</p>
+
+<p>
+La nouvelle position horizontale <i>X0</i> est donc égale à \(\frac{Xmin + Xmax}{2}\) 
+et la nouvelle position verticale <i>Y0</i> est égale à \(\frac{Ymin + Ymax}{2}\).
+Puisqu'on fait une division entière (on ne souhaite pas, <i>a priori</i>, avoir des coordonnées décimales),
+ces valeurs seront arrondies à l'entier inférieur près. 
+</p>
+
+<p>
+Le programme affiche enfin la valeur de <i>X0</i> et de <i>Y0</i>,
+puis Codingame interprète ces données pour déplacer Batman à l'écran.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf2e58a2" class="outline-2">
+<h2 id="orgf2e58a2"><span class="section-number-2">3</span> Code commenté de la solution</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Voici le programme proposé, écrit en langage C :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">
+#include &lt;stdio.h&gt;
+
+int main() {
+    int Xmin = 0;
+    int Xmax; // Largeur du bâtiment
+    int Ymin = 0;
+    int Ymax; // Hauteur du bâtiment
+    scanf("%d%d", &amp;Xmax, &amp;Ymax);
+
+    int N; // Nombre maximal de tours avant la fin de la partie
+    scanf("%d", &amp;N);
+
+    int X0; // Position horizontale de départ
+    int Y0; // Position verticale de départ
+    scanf("%d%d", &amp;X0, &amp;Y0);
+
+    Xmax -= 1; // Valeur maximale possible à l'horizontale
+    Ymax -= 1; // Valeur maximale possible à la verticale
+
+    // Boucle infinie 
+    while (1) {
+	char bomb_dir[3]; // Direction des bombes depuis la position (U, UR, R, DR, D, DL, L or UL)
+	scanf("%s", bomb_dir);
+
+	// Réduction de la zone de recherche
+
+	if (bomb_dir[1] == 'R' || bomb_dir[0] == 'R') {
+	    Xmin = X0 + 1; // On ignore les cases à gauche
+	} else if (bomb_dir[1] == 'L' || bomb_dir[0] == 'L') {
+	    Xmax = X0 - 1; // On ignore les cases à droite
+	}
+
+	if (bomb_dir[0] == 'D') {
+	    Ymin = Y0 + 1; // On ignore les cases en haut
+	} else if (bomb_dir[0] == 'U') {
+	    Ymax = Y0 - 1; // On ignore les cases en bas
+	}
+
+	// Calcul du prochain emplacement où Batman doit sauter (centre du rectangle de recherche).
+	X0 = (Xmin + Xmax) / 2;
+	Y0 = (Ymin + Ymax) / 2;
+
+	printf("%d %d\n", X0, Y0);
+    }
+
+    return 0;
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4cdad96" class="outline-2">
+<h2 id="org4cdad96"><span class="section-number-2">4</span> Analyse des résultats</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Ce programme a réussi tous les tests proposés par Codingame.
+Cependant, certains étaient validés de justesse.
+Ainsi, il arrivait parfois que la bonne fenêtre soit trouvée lors du dernier essai avant l'explosion.
+</p>
+
+<p>
+Globalement, le programme est plutôt rapide.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbc28738" class="outline-2">
+<h2 id="orgbc28738"><span class="section-number-2">5</span> Description d'une autre solution</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+La solution ci-dessous a été proposée sur Codingame par l'utilisateur "Alain-Delpuch" :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">
+#include &lt;stdio.h&gt;
+
+int main() {
+    int W; // width of the building.
+    int H; // height of the building.
+    scanf("%d%d", &amp;W, &amp;H);
+
+    int N; // maximum number of turns before game over.
+    scanf("%d", &amp;N);
+
+    int X0;
+    int Y0;
+    scanf("%d%d", &amp;X0, &amp;Y0);
+
+    int xmin = 0 ; int xmax = W ;
+    int ymin = 0 ; int ymax = H ;
+
+    // game loop
+    while (N--) {
+	char bombDir[4]; // the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
+	scanf("%s", bombDir);
+	switch (bombDir[0]) {
+	    case 'U' : ymax = Y0 ; break ;
+	    case 'D' : ymin = Y0 ; break ;
+	    case 'R' : xmin = X0 ; break ;
+	    case 'L' : xmax = X0 ; break ;
+	}
+	switch (bombDir[1]) {
+	    case 'R' : xmin = X0 ; break ;
+	    case 'L' : xmax = X0 ; break ;
+	}
+
+	Y0 = (ymax + ymin)/2 ; 
+	X0 = (xmin + xmax)/2 ; 
+
+	printf("%d %d\n", X0, Y0);
+    }
+}
+
+</pre>
+</div>
+
+<p>
+Cette solution m'a séduit car elle remplace la série de <i>if</i> par deux <i>switch</i>,
+ce qui rend le code plus lisible. La logique reste cependant similaire à mon programme.
+</p>
+
+<p>
+En revanche, on peut regretter le fait que la recherche dichotomique ne soit pas plus optimisée :
+on a ainsi, par exemple, <i>ymax = Y0</i> au lieu de <i>ymax = Y0 - 1</i>.
+De plus, la syntaxe du <i>switch</i> n'est pas réglementaire :
+plusieurs instructions sont sur une même ligne, ce qui n'est pas conseillé.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbbe0362" class="outline-2">
+<h2 id="orgbbe0362"><span class="section-number-2">6</span> Bilan des apprentissages</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Pour conclure, lors de cet exercice, j'ai pu :
+</p>
+
+<ul class="org-ul">
+<li>renforcer mes connaissances sur les <b>chaînes de caractères</b>.</li>
+<li>revoir comment coder un algorithme de <b>recherche dichotomique</b> et bien l'optimiser.</li>
+<li>apercevoir des <b>structures particulières</b> en C (la boucle <i>while(1)</i> pour faire une boucle infinie).</li>
+<li><b>comparer</b> ma solution à celles <b>d'autres personnes</b>.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 15/02/2022</p>
+<p class="author">Auteur: Valentin PORTAIL</p>
+<p class="date">Created: 2022-02-13 dim. 17:21</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

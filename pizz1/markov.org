@@ -1,0 +1,553 @@
+#+language: fr
+#+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+options: toc:nil
+#+options: ^:{}
+#+html_head: <link rel="stylesheet" type="text/css" href="markov.css" />
+
+#+title: Markov Text Generator, ou générer des phrases aléatoires
+#+author: Valentin PORTAIL
+#+date: 15/03/2022
+
+#+begin_center
+
+Valentin PORTAIL - Prép'ISIMA 1 - 2021/2022
+
+[[./images/logo_uca.png]] [[./images/logo_isima.png]]
+
+[[https://perso.isima.fr/~vaportail/pizz1/markov.html][Lien vers la page web]]
+
+[[./images/markov.jpg]]
+
+Image montant des lettres en bois formant le mot "keywords" (mots-clés)
+
+#+end_center
+
+#+toc: headlines
+
+* Enoncé du problème
+
+L'objectif de cet exercice est de créer un générateur de texte aléatoire
+dans le but de faire parler des personnages de jeu-vidéo,
+même si les phrases n'ont aucun sens.
+
+Pour cela, nous disposons : 
+
+- d'une phrase complète notée /t/ ;
+- d'une profondeur de [[https://fr.wikipedia.org/wiki/N-gramme][n-gramme]] (les différents segments de notre texte)
+  notée /d/ ;
+- de la longueur en mots de la phrase finale notée /l/ ;
+- d'un texte de départ noté /s/
+  à partir duquel nous devrons constituer la phrase finale.
+
+Le programme devra renvoyer le texte généré aléatoirement.
+
+Pour cela, il faudra parcourir le texte pour créer une
+[[https://fr.wikipedia.org/wiki/Cha%C3%AEne_de_Markov][chaîne de Markov]] où à chaque n-gramme seront associés
+les mots qui le suivent directement dans le texte.
+Ensuite, le texte final sera généré de manière pseudo-aléatoire,
+à l'aide d'une fonction qui nous est donnée.
+
+L'énoncé de l'exercice sur CodinGame nous invite à faire des recherches
+sur les chaînes de Markov et les n-grammes
+afin de mieux comprendre ce qu'on nous demande de faire.
+
+* Solution proposée
+
+** Séparer les mots de la phrase complète
+
+Afin de faciliter la manipulation des mots de la phrase /t/,
+on les sépare et on les met dans un tableau
+que l'on appellera /text/.
+
+Pour cela, on définit une fonction /separe_mots/
+qui prend en argument une chaîne de caractères /txt/, un tableau /tab/
+et un pointeur sur un entier /nb_mots/
+et qui copie les mots de /txt/ séparés par un espace dans /tab/.
+
+#+name: func_separe_mots
+#+begin_src C :results none
+
+  void separe_mots (char * txt, char tab[][101], int * nb_mots) {
+      int i;
+      char mot[101]; // Mot que l'on étudie
+
+      for (i = 0; i <= strlen(txt); ++i) { // On parcourt le texte
+	  if (txt[i] == ' ' || txt[i] == '\0') { // Si on tombe sur un espace ou sur la fin du texte
+	      strcat(mot, "\0"); // On indique la fin du mot
+	      strcpy(tab[*nb_mots], mot); // On insère le mot dans le tableau
+	      sprintf(mot, ""); // On réinitialise mot
+	      ,*nb_mots += 1; // Permet de modifier la variable en dehors de la fonction
+	  } else {
+	      sprintf(mot, "%s%c", mot, txt[i]); // On ajoute le caractère au mot
+	  }
+      }
+  }
+
+#+end_src
+
+On utilise cette fonction dans le programme principal avec /t/ et /text/.
+
+#+name: separe_mots_phrase_complete
+#+begin_src C :results none
+
+  char text[101][101]; // Contient les mots de la phrase complète
+  int nb_mots = 0; // Nombre de mots dans le tableau
+
+  separe_mots(t, text, &nb_mots);
+
+#+end_src
+
+** Créer la chaîne de Markov
+
+Pour nous aider à manipuler la chaîne de Markov,
+on crée une structure appelée /markov/
+qui contient un élément de la chaîne de Markov,
+c'est-à-dire, un n-gramme /ngram/
+et un tableau contenant les valeurs associées /chain/.
+
+#+name: struct_markov
+#+begin_src C :results none
+
+  typedef struct markov {
+      char ngram[101]; // Le n-gramme (texte) qu'on étudie
+      int  number_chains; // Le nombre de mots trouvés
+      char chain[101][101]; // Un tableau contenant les mots trouvés
+  } markov;
+
+#+end_src
+
+Dans le programme principal, on crée une chaîne de Markov /chaines/
+qui contiendra les n-grammes et les mots qui leur sont associés,
+un entier /nb_chaines/ représentant le nombre d'éléments dans la chaîne de Markov
+et une chaîne de caractères /n_gramme/ représentant un n-gramme.
+
+On parcourt le tableau /text/ :
+à chaque étape, on recompose le n-gramme à partir du tableau /text/
+dans la chaîne de caractères /n_gramme/,
+puis on compare avec les n-grammes présents dans la chaîne de Markov.
+- Si l'une d'entre elles est identique à /n_gramme/,
+  on ajoute le mot situé juste après le n-gramme au tableau /chaines[j].chain/.
+- Sinon, on crée un nouvel élément dans lequel on insère /n-gramme/
+  et on ajoute le mot situé juste après le n-gramme au tableau /chaines[j].chain/.
+
+#+name: creer_markov
+#+begin_src C :results none
+
+  markov chaines[101]; // Chaîne de Markov contenant les n-grammes
+		       //  et les mots qui leur sont associés
+  int nb_chaines = 0; // Nombre de n_grammes
+  char n_gramme[101]; // N-gramme que l'on étudit
+
+  int i; // N-gramme que l'on étudit
+  int j; // Un des mots associés au n-gramme étudié
+
+  for (i = 0; i <= nb_mots-d-1; ++i) {
+      sprintf(n_gramme, ""); // On initialise le texte du n-gramme
+
+      // On recompose le n-gramme à partir des données du tableau contenant la phrase complète
+      for (j = 0; j < d-1; ++j) {
+	  strcat(n_gramme, text[i+j]);
+	  strcat(n_gramme, " ");
+      }
+      strcat(n_gramme, text[i+d-1]);
+      strcat(n_gramme, "\0");
+
+      j = 0;
+      while (strcmp(n_gramme, chaines[j].ngram) && (j < nb_chaines)) {
+      // On parcourt le tableau tant que l'on a pas trouvé le bon n-gramme
+	  ++j;
+      }
+
+      if (j == nb_chaines) { // Si on n'a pas trouvé un n-gramme correspondant
+	  strcpy(chaines[j].ngram, n_gramme); // On crée un nouveau n-gramme...
+	  strcpy(chaines[j].chain[chaines[j].number_chains], text[i+d]); // ... et on y associe le mot trouvé.
+	  chaines[j].number_chains = 1;
+	  nb_chaines += 1;
+      } else { // Si on a trouvé un n-gramme correspondant
+	  strcat(chaines[j].chain[chaines[j].number_chains], text[i+d]); // On associe au n-gramme le mot trouvé.
+	  chaines[j].number_chains += 1;
+      }
+  }
+
+#+end_src
+
+** Choisir les mots aléatoirement
+
+On commence par définir la fonction /pick_option_index/
+à l'aide du pseudo-code fourni dans l'énoncé CodinGame.
+
+Elle prend en argument un entier /nb_options/
+représentant le nombre de choix possibles,
+modifie une variable globale /random_seed/
+et renvoie le reste de la division euclidienne
+entre /random_seed/ et /nb_options/.
+
+Cette fonction a pour but de renvoyer des résultats "pseudo-aléatoires"
+afin de faciliter les tests de CodinGame.
+
+#+name: func_aleatoire
+#+begin_src C :results none
+
+  int random_seed = 0; // Variable globale nécessaire pour le bon fonctionnement de la fonction
+
+  int pick_option_index(int nb_options) {
+      random_seed += 7; // Valeur arbitraire pour créer du pseudo-aléatoire
+      return random_seed % nb_options;
+  }
+
+#+end_src
+
+Dans le programme principal, afin de faciliter
+la manipulation des mots du texte /s/,
+on les sépare et on les met dans un tableau
+que l'on appellera /result/.
+
+On utilise la fonction /separe_mots/ définie précedemment avec /s/ et /result/.
+
+#+name: separe_mots_resultat
+#+begin_src C :results none
+
+  char result[101][101]; // Tableau contenant le phrase finale
+  int nb_mots_result = 0; // Nombre de mots dans la phrase finale
+  int mk; // Element de la chaîne de Markov que l'on étudit
+  int ind_aleatoire; // Indice aléatoire du mot choisi
+  char n_gramme_result[101]; // N-gramme du résultat que l'on étudit
+
+  separe_mots(s, result, &nb_mots_result);
+
+#+end_src
+
+Ensuite, tant que la longueur de notre résultat
+est inférieure à la longueur de la phrase voulue,
+on recompose un n-gramme à partir des données du tableau /text/,
+on recherche ce n-gramme dans la chaîne de markov /chaines/,
+on choisit un mot au "hasard" et on l'ajoute au résultat.
+
+#+name: choisir_mots_aleatoires
+#+begin_src C :results none
+
+  while (nb_mots_result < l) { // Tant que l'on n'a a pas la bonne longueur
+      sprintf(n_gramme_result, ""); // On initialise le texte du n-gramme
+
+      // On recompose le n-gramme à partir des données du tableau contenant la phrase complète
+      for (i = nb_mots_result-d; i < nb_mots_result; ++i){
+	  strcat(n_gramme_result, result[i]);
+	  if (i < nb_mots_result-1) {
+	      strcat(n_gramme_result, " ");
+	  }
+      }
+
+      mk = 0;
+      while (strcmp(n_gramme_result, chaines[mk].ngram)) { // On parcourt le tableau tant que l'on a pas trouvé le bon n-gramme
+	  ++mk;
+      }
+
+      ind_aleatoire = pick_option_index(chaines[mk].number_chains); // On choisit un indice aléatoire
+      strcpy(result[nb_mots_result], chaines[mk].chain[ind_aleatoire]); // On ajoute le mot trouvé dans la phrase finale
+      nb_mots_result += 1;
+  }
+
+#+end_src
+
+** Ecrire la phrase
+
+On recompose la phrase finale à partir du tableau /resultat/,
+puis on l'affiche.
+
+#+name: ecrire_phrase
+#+begin_src C :results none
+
+  sprintf(s, ""); // On initialise la phrase finale
+
+  // On recompose la phrase finale à partir des données du tableau
+  for (i = 0; i < nb_mots_result; ++i){
+      strcat(s, result[i]);
+      if (i < nb_mots_result-1) {
+	  strcat(s, " ");
+      }
+  }
+
+  printf("%s\n", s);
+
+#+end_src
+
+** Plan du programme final
+
+#+name: markov
+#+begin_src C :flags -Wall -Wextra :tangle markov.c :noweb no-export
+
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <string.h>
+
+  <<struct_markov>>
+
+  <<func_aleatoire>>
+  <<func_separe_mots>>
+
+  int main() {
+      char t[1001]; // Phrase complète
+      scanf("%[^\n]", t);
+      int d; // Taille du n-gramme
+      scanf("%d", &d);
+      int l; // Longueur de la phrase finale
+      scanf("%d", &l); fgetc(stdin);
+      char s[1001]; // Texte de départ
+      scanf("%[^\n]", s);
+
+      <<separe_mots_phrase_complete>>
+
+      <<creer_markov>>
+
+      <<separe_mots_resultat>>
+      <<choisir_mots_aleatoires>>
+
+      <<ecrire_phrase>>
+
+      return 0;
+  }
+
+#+end_src
+
+* Tests
+
+#+name: compile
+#+BEGIN_SRC bash :var file_in="markov.c" file_out ="markov" :results none :exports none
+  gcc -Wall -Wextra $file_in -o $file_out 
+#+END_SRC
+
+#+name: test_function
+#+BEGIN_SRC python :results output :var exe="./markov" test_in=test1.in test_out=test1.out :exports none
+  import os
+   
+  f = open("test.in", "w")
+  for u in test_in:
+    f.write(u) 
+  f.close()
+
+  stream = os.popen(exe+" <test.in")
+  output = stream.read()
+  
+  if output==test_out:
+     print("Test réussi")
+  else:
+     print("Echec du test" )  
+     print("obtenu :\t", output)
+     print("désiré :\t", test_out)
+
+#+END_SRC
+
+#+call: compile("markov.c", "markov")
+
+** Test 1
+
+Entrée :
+#+name: test1.in
+one fish is good and no fish is bad and that is it
+2
+4
+fish is
+
+Sortie attendue :
+#+name: test1.out
+fish is bad and
+
+#+call: test_function("./markov", test1.in, test1.out)
+
+#+RESULTS:
+: Test réussi
+
+** Test 2
+
+Entrée :
+#+name: test2.in
+one fish is good and no fish is bad and that is it
+1
+4
+one
+
+Sortie attendue :
+#+name: test2.out
+one fish is good
+
+#+call: test_function("./markov", test2.in, test2.out)
+
+#+RESULTS:
+: Test réussi
+
+** Test 3
+
+Entrée :
+#+name: test3.in
+stop there once was a girl named dorothy stop dorothy had a dog named toto stop dorothy lived with her aunt and uncle with her dog named toto stop she was a girl of who dreamed of traveling stop
+2
+10
+dorothy was a
+
+Sortie attendue :
+#+name: test3.out
+dorothy was a girl named dorothy stop dorothy had a
+
+#+call: test_function("./markov", test3.in, test3.out)
+
+#+RESULTS:
+: Test réussi
+
+** Test 4
+
+Entrée :
+#+name: test4.in
+stop there once was a girl named dorothy stop dorothy had a dog named toto stop dorothy lived with her aunt and uncle with her dog named toto stop she was a girl of who dreamed of traveling stop
+3
+10
+stop dorothy had
+
+Sortie attendue :
+#+name: test4.out
+stop dorothy had a dog named toto stop dorothy lived
+
+#+call: test_function("./markov", test4.in, test4.out)
+
+#+RESULTS:
+: Test réussi
+
+* Description d'une autre solution
+
+Cette solution a été proposée sur CodinGame par l'utilisateur "Vane26" : 
+
+#+begin_src C
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+int choisir_option(int num,int nd_option){
+    return num%nd_option;
+}
+
+int nombre_mot_chaine(char chaine[]){
+    int i;
+    int nb=1;
+    for (i=0;i<strlen(chaine);i++){
+        if (chaine[i]==' '){
+            nb++;
+        }
+    }
+    return nb;
+}
+
+int main(){
+    char t[1001];
+    scanf("%[^\n]", t);
+    int d;
+    scanf("%d", &d);
+    int l;
+    scanf("%d", &l); fgetc(stdin);
+    char s[1001];
+    scanf("%[^\n]", s);
+
+    int i=1;
+    int j=1;
+    int nb_source=nombre_mot_chaine(s);
+    int nb_phrase=nombre_mot_chaine(t);
+    char *mot[500];
+    mot[0]=strtok(t," ");    
+    while(mot[i]!=NULL || i==1){        // On décompose en mot le texte
+        mot[i]=strtok(NULL," ");
+        i++;
+    }
+
+    char *n_gramm[nb_phrase][10]; // On définit le n_gramm
+    for (i=0;i<(nb_phrase-d);i++){
+        for(j=0;j<d+1;j++){
+            n_gramm[i][j]=mot[j+i];
+        }
+    }   
+    
+    printf("%s ",s);
+    int z=1;
+    char *mot_cible[nb_source];
+    mot_cible[0]=strtok(s," ");
+    
+    while(z!=nb_source && nb_source!=1){
+        mot_cible[z]=strtok(NULL," ");
+        z++;
+    }
+    int mot_phrase=nb_source;
+    int deb_source=nb_source-d;
+    int correlation=0;
+    int random_seed=0;
+
+    while(mot_phrase!=l){ //affichage des textes
+        int affiche=0;
+        int nb_option=0;
+        int option[100]={0};
+        int last_seed=0;
+        for (i=0;i<(nb_phrase-d);i++){
+            for(j=0;j<d;j++){
+                if(*n_gramm[i][j]==*mot_cible[j+deb_source]){                    
+                    correlation++;
+                }
+            }             
+            if (correlation==d){
+                option[nb_option]=i;
+                last_seed=i+1;
+                nb_option++;               
+            }
+            correlation=0;   
+        }
+        mot_phrase++;
+        random_seed+=7;
+        affiche=option[choisir_option(random_seed,nb_option)]; 
+                
+        if (mot_phrase==l){
+            printf("%s",n_gramm[affiche][d]);
+        }
+        else{
+            printf("%s ",n_gramm[affiche][d]);
+        }
+        for(i=0;i<d;i++){
+            mot_cible[i+deb_source]=n_gramm[affiche][i+1];
+        }
+        
+    }
+    return 0;
+}
+
+#+end_src
+
+Cette solution a un fonctionnement similaire à la mienne.
+On commence par découper le texte en mots,
+puis on définit le n-gramme et on parcourt le texte.
+Cependant, celle-ci semble calculer la chaîne de Markov
+au fur et à mesure des n-grammes,
+au lieu de la calculer entièrement comme dans la mienne.
+
+Ainsi, elle a plusieurs avantages :
+- Le code est plus compact (97 lignes contre 141 pour la mienne).
+- La fonction /strtok/ de la bibliothèque <string.h> permet d'éviter de créer
+  une fonction annexe pour séparer les mots d'un texte.
+- Elle est plus efficace : on évite de calculer des éléments inutiles car on
+  calcule la chaîne de Markov au fur et à mesure.
+
+Cependant, je trouve que le code manque de commentaires
+permettant d'expliquer son fonctionnement.
+
+* Conclusion
+
+Pour conclure, j'ai trouvé cet exercice beaucoup plus difficile que les
+précédents.
+En effet, la gestion des tableaux et des chaînes de caractères est
+assez rudimentaire en C et il faut souvent faire preuve d'astuce pour effectuer
+des opérations "complexes" comme séparer les éléments d'une chaîne de caractères
+selon un caractère précis.
+Selon moi, cet exercice aurait été plus simple dans un langage comme Python
+où le type des variables est plus "souple"
+et où de nombreuses fonctions de traitement des listes sont intégrées.
+
+Au delà de ces difficultés, j'ai pu apprendre à mieux gérer les chaînes de
+caractères en C et découvrir des fonctions comme /strtok/ qui n'ont pas été
+abordées en cours.
+
+

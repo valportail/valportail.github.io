@@ -1,0 +1,990 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+<!-- 2022-04-09 sam. 15:26 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Death First Search, ou couper les bons liens</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Valentin PORTAIL" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Death First Search, ou couper les bons liens</h1>
+<div class="org-center">
+<p>
+
+</p>
+
+<p>
+Valentin PORTAIL - Prép'ISIMA 1 - 2021/2022
+</p>
+
+<p>
+<img src="./images/logo_uca.png" alt="logo_uca.png" /> <img src="./images/logo_isima.png" alt="logo_isima.png" />
+</p>
+
+<p>
+<a href="https://perso.isima.fr/~vaportail/pizz1/death_first_search.html">Lien vers la page web</a>
+</p>
+
+
+<div id="org4cebb7c" class="figure">
+<p><img src="./images/reseau.jpg" alt="reseau.jpg" />
+</p>
+<p><span class="figure-number">Figure&nbsp;1&nbsp;: </span>Image montant des câbles de fibre optique dans lesquels transitent des informations</p>
+</div>
+</div>
+
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6f6c414">1. Enoncé du problème</a></li>
+<li><a href="#orgf590384">2. Méthode de résolution</a>
+<ul>
+<li><a href="#org5406a4e">2.1. Stocker les données</a></li>
+<li><a href="#orgaa768ef">2.2. Choisir le lien à couper</a></li>
+</ul>
+</li>
+<li><a href="#orgc4d0bab">3. Implémentation en C</a>
+<ul>
+<li><a href="#org27c1270">3.1. Description pas à pas</a></li>
+<li><a href="#org51badb7">3.2. Code complet</a></li>
+</ul>
+</li>
+<li><a href="#orgfbece63">4. Tests</a></li>
+<li><a href="#org7e27229">5. Description d'une autre solution</a></li>
+<li><a href="#org261ff2f">6. Conclusion</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6f6c414" class="outline-2">
+<h2 id="org6f6c414"><span class="section-number-2">1</span> Enoncé du problème</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Dans cet exercice, nous contrôlons un virus informatique ayant pour but de
+s'infiltrer dans un réseau informatique sans se faire remarquer.
+L'objectif est d'empêcher l'agent Bobnet (représenté dans l'exercice en rouge)
+de communiquer sur le réseau interne
+en coupant les passages vers les passerelles (représentées en bleu).
+</p>
+
+<p>
+Pour cela, nous disposons : 
+</p>
+
+<ul class="org-ul">
+<li>de la carte du sous-réseau, c'est-à-dire :
+<ul class="org-ul">
+<li>du nombre de nœuds du sous-réseau noté <i>N</i>;</li>
+<li>du nombre de liens du sous-réseau noté <i>L</i>;</li>
+<li>du nombre de passerelles du réseau noté <i>E</i>;</li>
+<li>des différents liens entre des nœuds <i>N1</i> et <i>N2</i>;</li>
+</ul></li>
+<li>des différentes passerelles <i>EI</i>.</li>
+<li>de l'emplacement de l'agent Bobnet noté <i>SI</i>.</li>
+</ul>
+
+<p>
+<b>Chaque nœud ne pourra être relié, au maximum, qu'à une seule passerelle.</b>
+</p>
+
+<p>
+Le programme devra renvoyer les deux nœuds <i>C1</i> et <i>C2</i>
+entre lesquels se trouve le lien à couper.
+</p>
+
+<p>
+A chaque tour de jeu, il faudra couper un des liens du sous-réseau,
+puis l'agent Bobnet se déplace sur l'un des nœuds encore accessibles.
+</p>
+
+<p>
+L'exercice est réussi si l'agent Bobnet ne peut plus atteindre aucune
+passerelle.
+Il est raté s'il atteint une passerelle.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf590384" class="outline-2">
+<h2 id="orgf590384"><span class="section-number-2">2</span> Méthode de résolution</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org5406a4e" class="outline-3">
+<h3 id="org5406a4e"><span class="section-number-3">2.1</span> Stocker les données</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+On commence par stocker le nombre de nœuds dans le niveau dans une variable <i>N</i>,
+le nombre de liens dans une variable <i>L</i>
+et le nombre de passerelles dans une variable <i>E</i>.
+</p>
+
+<p>
+On va ensuite les liens qui relient les nœuds entre eux.
+</p>
+
+<p>
+Pour cela, on crée une structure <i>nlinks</i> qui contiendra les liens partant de
+chaque nœud. Elle contiendra le nombre de liens <i>nb_links</i>
+et l'ensemble des nœuds adjacents stockés dans un tableau <i>nodes</i>.
+</p>
+
+<p>
+Ces structures seront stockées dans un tableau <i>links</i> de manière à ce que
+l'élément <i>links[i]</i> corresponde au nœud <i>i</i>. (Chaque nœud est numéroté de 0 à
+N-1.)
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<p>
+<b>Attention</b> : Chaque lien sera donc représenté 2 fois (de A à B et de B à A).
+Il faudra donc faire attention au moment de retirer un lien du tableau.
+</p>
+</blockquote>
+
+<p>
+Par exemple, le tableau suivant :
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-center" />
+
+<col  class="org-center" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-center">i</th>
+<th scope="col" class="org-center">nb_links</th>
+<th scope="col" class="org-left">nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-center">0</td>
+<td class="org-center">2</td>
+<td class="org-left">{1,2}</td>
+</tr>
+
+<tr>
+<td class="org-center">1</td>
+<td class="org-center">2</td>
+<td class="org-left">{0,3}</td>
+</tr>
+
+<tr>
+<td class="org-center">2</td>
+<td class="org-center">2</td>
+<td class="org-left">{0,3}</td>
+</tr>
+
+<tr>
+<td class="org-center">3</td>
+<td class="org-center">2</td>
+<td class="org-left">{1,2}</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+&#x2026;représentera le graphe suivant :
+</p>
+
+
+<div id="org05a03eb" class="figure">
+<p><img src="images/links.png" alt="links.png" />
+</p>
+</div>
+
+<p>
+Les nœuds correspondant aux passerelles seront, quant à eux, stockés dans un tableau <i>gateways</i>.
+</p>
+
+<p>
+Dans l'exemple ci-dessus, puisque la seule passerelle est le nœud 3,
+le tableau <i>gateways</i> contiendra seulement la valeur <i>3</i>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgaa768ef" class="outline-3">
+<h3 id="orgaa768ef"><span class="section-number-3">2.2</span> Choisir le lien à couper</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+On suppose que l'agent Bobnet est sur le nœud <i>SI</i>.
+</p>
+
+<p>
+À chaque tour de jeu, afin de trouver le lien à couper,
+on procède de la manière suivante :
+</p>
+<ul class="org-ul">
+<li>Si l'agent est à un lien d'une passerelle,
+on coupe le lien reliant SI à la passerelle.</li>
+<li>Sinon, on coupe un lien quelconque autour de l'agent.</li>
+</ul>
+
+<p>
+Il faudra donc parcourir les différents nœuds adjacents à <i>SI</i>
+et vérifier s'ils apparaissent dans le tableau <i>gateways</i>.
+Si on ne trouve aucune passerelle, on coupera de manière arbitraire
+le premier lien apparaissant dans le tableau <i>links</i>.
+</p>
+
+<p>
+Une fois cela fait, pour éviter de recouper un lien déjà coupé,
+on enlèvera le lien du tableau <i>links</i>
+en faisant attention à bien enlever les deux apparitions du lien.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc4d0bab" class="outline-2">
+<h2 id="orgc4d0bab"><span class="section-number-2">3</span> Implémentation en C</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org27c1270" class="outline-3">
+<h3 id="org27c1270"><span class="section-number-3">3.1</span> Description pas à pas</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+On commence par définir la structure <i>nlinks</i> qui contiendra  le nombre de liens <i>nb_links</i>
+et l'ensemble des nœuds adjacents stockés dans un tableau <i>nodes</i>.
+Elle sera donc implémentée comme un tableau partiellement rempli de taille 50,
+ce qui permettra de passer la plupart des tests.
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<p>
+<b>Remarque</b> : Comme on ne connaît pas à l'avance le nombre de nœuds adjacents à
+chaque nœud, il n'est pas possible d'allouer dynamiquement la taille du
+tableau.
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-C" id="org76a5ef4"><span style="color: #ff79c6; font-weight: bold;">typedef</span> <span style="color: #ff79c6; font-weight: bold;">struct</span> <span style="color: #bd93f9; font-weight: bold;">node_links</span> <span style="color: #61bfff;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_links</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nodes</span><span style="color: #ff79c6;">[</span>50<span style="color: #ff79c6;">]</span>;
+<span style="color: #61bfff;">}</span> <span style="color: #bd93f9; font-weight: bold;">nlinks</span>;
+</pre>
+</div>
+
+<p>
+On définit ensuite la fonction <i>rm_link</i>
+qui prend en argument un tableau de <i>nlinks</i> appelé <i>links</i>
+et deux entiers <i>N1</i> et <i>N2</i> qui représentent deux nœuds de <i>links</i>,
+qui ne renvoie rien et qui supprime le lien reliant <i>N1</i> et <i>N2</i>
+en faisant attention à bien supprimer les deux apparitions :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="orgca6adbd"><span style="color: #bd93f9; font-weight: bold;">void</span> <span style="color: #50fa7b; font-weight: bold;">rm_link</span> <span style="color: #61bfff;">(</span><span style="color: #bd93f9; font-weight: bold;">nlinks</span> * <span style="color: #ffc9e8;">links</span>, <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N1</span>, <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N2</span><span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span>
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>;
+
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">removed1</span> = 0;
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">removed2</span> = 0;
+
+  <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">N1 -&gt; N2</span><span style="color: #6272a4;"> */</span>
+  i = 0;
+  <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>removed1 &amp;&amp; i &lt; links<span style="color: #50fa7b;">[</span>N1<span style="color: #50fa7b;">]</span>.nb_links<span style="color: #ff79c6;">)</span>  <span style="color: #ff79c6;">{</span>
+    <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> == N2<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span>
+      links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> = links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>links<span style="color: #0189cc;">[</span>N1<span style="color: #0189cc;">]</span>.nb_links - 1<span style="color: #bd93f9;">]</span>;
+      --links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nb_links;
+      removed1 = 1;
+    <span style="color: #50fa7b;">}</span>
+    ++i;
+  <span style="color: #ff79c6;">}</span>
+
+  <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">N2 -&gt; N1</span><span style="color: #6272a4;"> */</span>
+  i = 0;
+  <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>removed2 &amp;&amp; i &lt; links<span style="color: #50fa7b;">[</span>N2<span style="color: #50fa7b;">]</span>.nb_links<span style="color: #ff79c6;">)</span>  <span style="color: #ff79c6;">{</span>
+    <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> == N1<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span>
+      links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> = links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>links<span style="color: #0189cc;">[</span>N2<span style="color: #0189cc;">]</span>.nb_links - 1<span style="color: #bd93f9;">]</span>;
+      --links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nb_links;
+    <span style="color: #50fa7b;">}</span>
+    ++i;
+  <span style="color: #ff79c6;">}</span>
+<span style="color: #61bfff;">}</span>
+</pre>
+</div>
+
+
+<p>
+Dans le programme principal, on commence par demander à CodinGame le nombre de nœuds <i>N</i>,
+le nombre de liens <i>L</i> et le nombre de passerelles <i>E</i> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="org1de7338"><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N</span>;
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">L</span>;
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">E</span>;
+scanf<span style="color: #61bfff;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d%d%d"</span>, &amp;N, &amp;L, &amp;E<span style="color: #61bfff;">)</span>;
+</pre>
+</div>
+
+<p>
+On initialise ensuite le tableau <i>links</i> qui contiendra
+les liens entre les nœuds.
+CodinGame indiquera les nœuds entre lesquels il doit y avoir un lien,
+puis le programme les ajoutera dans le tableau <i>links</i> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="orgf43ecdb"><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>;
+<span style="color: #bd93f9; font-weight: bold;">nlinks</span> <span style="color: #ffc9e8;">links</span><span style="color: #61bfff;">[</span>500<span style="color: #61bfff;">]</span>;
+
+<span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #61bfff;">(</span>i = 0; i &lt; L; i++<span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span>
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N1</span>;
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N2</span>;
+  scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d%d"</span>, &amp;N1, &amp;N2<span style="color: #ff79c6;">)</span>;
+
+  links<span style="color: #ff79c6;">[</span>N1<span style="color: #ff79c6;">]</span>.nodes<span style="color: #ff79c6;">[</span>links<span style="color: #50fa7b;">[</span>N1<span style="color: #50fa7b;">]</span>.nb_links<span style="color: #ff79c6;">]</span> = N2;
+  ++links<span style="color: #ff79c6;">[</span>N1<span style="color: #ff79c6;">]</span>.nb_links;
+
+  links<span style="color: #ff79c6;">[</span>N2<span style="color: #ff79c6;">]</span>.nodes<span style="color: #ff79c6;">[</span>links<span style="color: #50fa7b;">[</span>N2<span style="color: #50fa7b;">]</span>.nb_links<span style="color: #ff79c6;">]</span> = N1;
+  ++links<span style="color: #ff79c6;">[</span>N2<span style="color: #ff79c6;">]</span>.nb_links;
+ <span style="color: #61bfff;">}</span>
+</pre>
+</div>
+
+<p>
+On fait de même avec la tableau <i>gateways</i> qui contiendra
+les passerelles du réseau :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="org5206ec0"><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">gateways</span><span style="color: #61bfff;">[</span>20<span style="color: #61bfff;">]</span>;
+
+<span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #61bfff;">(</span>i = 0; i &lt; E; i++<span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span>
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">EI</span>;
+  scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;EI<span style="color: #ff79c6;">)</span>;
+  gateways<span style="color: #ff79c6;">[</span>i<span style="color: #ff79c6;">]</span> = EI;
+ <span style="color: #61bfff;">}</span>
+</pre>
+</div>
+
+<blockquote>
+<p>
+
+</p>
+
+<p>
+<b>Attention</b> : A cet instant, le programme entre dans une boucle infinie.
+Chaque itération dans la boucle infinie représentera un tour de jeu.
+CodinGame arrêtera la boucle infinie lorsque les conditions de victoire,
+c'est-à-dire, lorsque l'agent Bobnet ne peut plus atteindre aucune passerelle,
+auront été remplies.
+</p>
+</blockquote>
+
+<p>
+A chaque tour de jeu, CodinGame indiquera la position de l'agent Bobnet
+qui sera stockée dans une variable <i>SI</i>.
+</p>
+
+<p>
+On souhaite voir si l'un des nœuds adjacents à <i>SI</i> est une passerelle.
+Pour cela, on parcourt l'ensemble des nœuds <i>n</i> du tableau <i>links[SI].nodes</i>
+et l'ensemble des passerelles <i>g</i> du tableau <i>gateways</i>
+et on vérifie si on trouve deux valeurs identiques.
+Si c'est le cas, on supprime le lien entre <i>SI</i> et le nœud <i>gateways[g]</i>.
+</p>
+
+<p>
+Si on ne trouve rien à la fin du parcours, on supprimera le lien entre <i>SI</i>
+et le nœud <i>links[SI].nodes[0]</i>.
+</p>
+
+<p>
+On aura stocké au préalable le deuxième nœud avant la suppression du lien
+dans une variable <i>C2</i>.
+</p>
+
+<p>
+On renvoie ensuite à CodinGame les nœuds <i>SI</i> et <i>C2</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C" id="orgfb1a868"><span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #61bfff;">(</span>1<span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span>
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">SI</span>;
+  scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;SI<span style="color: #ff79c6;">)</span>;
+
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">n</span>;
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">g</span>;
+
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">found</span> = 0;
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">C2</span>;
+
+  n = 0;
+  <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>found &amp;&amp; <span style="color: #50fa7b;">(</span>n &lt; links<span style="color: #bd93f9;">[</span>SI<span style="color: #bd93f9;">]</span>.nb_links<span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+    g = 0;
+    <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #50fa7b;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>found &amp;&amp; g &lt; E<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span>
+      <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #bd93f9;">(</span>links<span style="color: #0189cc;">[</span>SI<span style="color: #0189cc;">]</span>.nodes<span style="color: #0189cc;">[</span>n<span style="color: #0189cc;">]</span> == gateways<span style="color: #0189cc;">[</span>g<span style="color: #0189cc;">]</span><span style="color: #bd93f9;">)</span> <span style="color: #bd93f9;">{</span>
+        found = 1;
+        C2 = gateways<span style="color: #0189cc;">[</span>g<span style="color: #0189cc;">]</span>;
+        rm_link<span style="color: #0189cc;">(</span>links, SI, gateways<span style="color: #61bfff;">[</span>g<span style="color: #61bfff;">]</span><span style="color: #0189cc;">)</span>;
+      <span style="color: #bd93f9;">}</span>
+      ++g;
+    <span style="color: #50fa7b;">}</span>
+    ++n;
+  <span style="color: #ff79c6;">}</span>
+
+  <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>found<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+    C2 = links<span style="color: #50fa7b;">[</span>SI<span style="color: #50fa7b;">]</span>.nodes<span style="color: #50fa7b;">[</span>0<span style="color: #50fa7b;">]</span>;
+    rm_link<span style="color: #50fa7b;">(</span>links, SI, links<span style="color: #bd93f9;">[</span>SI<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>0<span style="color: #bd93f9;">]</span><span style="color: #50fa7b;">)</span>;
+  <span style="color: #ff79c6;">}</span>
+
+  printf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d %d\n"</span>, SI, C2<span style="color: #ff79c6;">)</span>;
+ <span style="color: #61bfff;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org51badb7" class="outline-3">
+<h3 id="org51badb7"><span class="section-number-3">3.2</span> Code complet</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-C" id="org615b5e0">
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdlib.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdio.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+
+<span style="color: #ff79c6; font-weight: bold;">typedef</span> <span style="color: #ff79c6; font-weight: bold;">struct</span> <span style="color: #bd93f9; font-weight: bold;">node_links</span> <span style="color: #61bfff;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nb_links</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">nodes</span><span style="color: #ff79c6;">[</span>50<span style="color: #ff79c6;">]</span>;
+<span style="color: #61bfff;">}</span> <span style="color: #bd93f9; font-weight: bold;">nlinks</span>;
+
+<span style="color: #bd93f9; font-weight: bold;">void</span> <span style="color: #50fa7b; font-weight: bold;">rm_link</span> <span style="color: #61bfff;">(</span><span style="color: #bd93f9; font-weight: bold;">nlinks</span> * <span style="color: #ffc9e8;">links</span>, <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N1</span>, <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N2</span><span style="color: #61bfff;">)</span> <span style="color: #61bfff;">{</span>
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>;
+
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">removed1</span> = 0;
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">removed2</span> = 0;
+
+  <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">N1 -&gt; N2</span><span style="color: #6272a4;"> */</span>
+  i = 0;
+  <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>removed1 &amp;&amp; i &lt; links<span style="color: #50fa7b;">[</span>N1<span style="color: #50fa7b;">]</span>.nb_links<span style="color: #ff79c6;">)</span>  <span style="color: #ff79c6;">{</span>
+    <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> == N2<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span>
+      links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> = links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>links<span style="color: #0189cc;">[</span>N1<span style="color: #0189cc;">]</span>.nb_links - 1<span style="color: #bd93f9;">]</span>;
+      --links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nb_links;
+      removed1 = 1;
+    <span style="color: #50fa7b;">}</span>
+    ++i;
+  <span style="color: #ff79c6;">}</span>
+
+  <span style="color: #6272a4;">/* </span><span style="color: #6272a4;">N2 -&gt; N1</span><span style="color: #6272a4;"> */</span>
+  i = 0;
+  <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>removed2 &amp;&amp; i &lt; links<span style="color: #50fa7b;">[</span>N2<span style="color: #50fa7b;">]</span>.nb_links<span style="color: #ff79c6;">)</span>  <span style="color: #ff79c6;">{</span>
+    <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> == N1<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span>
+      links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span> = links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>links<span style="color: #0189cc;">[</span>N2<span style="color: #0189cc;">]</span>.nb_links - 1<span style="color: #bd93f9;">]</span>;
+      --links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nb_links;
+    <span style="color: #50fa7b;">}</span>
+    ++i;
+  <span style="color: #ff79c6;">}</span>
+<span style="color: #61bfff;">}</span>
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #50fa7b; font-weight: bold;">main</span> <span style="color: #61bfff;">()</span> <span style="color: #61bfff;">{</span>
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N</span>;
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">L</span>;
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">E</span>;
+  scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d%d%d"</span>, &amp;N, &amp;L, &amp;E<span style="color: #ff79c6;">)</span>;
+
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>;
+  <span style="color: #bd93f9; font-weight: bold;">nlinks</span> <span style="color: #ffc9e8;">links</span><span style="color: #ff79c6;">[</span>500<span style="color: #ff79c6;">]</span>;
+
+  <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span>i = 0; i &lt; L; i++<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N1</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N2</span>;
+    scanf<span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d%d"</span>, &amp;N1, &amp;N2<span style="color: #50fa7b;">)</span>;
+
+    links<span style="color: #50fa7b;">[</span>N1<span style="color: #50fa7b;">]</span>.nodes<span style="color: #50fa7b;">[</span>links<span style="color: #bd93f9;">[</span>N1<span style="color: #bd93f9;">]</span>.nb_links<span style="color: #50fa7b;">]</span> = N2;
+    ++links<span style="color: #50fa7b;">[</span>N1<span style="color: #50fa7b;">]</span>.nb_links;
+
+    links<span style="color: #50fa7b;">[</span>N2<span style="color: #50fa7b;">]</span>.nodes<span style="color: #50fa7b;">[</span>links<span style="color: #bd93f9;">[</span>N2<span style="color: #bd93f9;">]</span>.nb_links<span style="color: #50fa7b;">]</span> = N1;
+    ++links<span style="color: #50fa7b;">[</span>N2<span style="color: #50fa7b;">]</span>.nb_links;
+   <span style="color: #ff79c6;">}</span>
+
+  <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">gateways</span><span style="color: #ff79c6;">[</span>20<span style="color: #ff79c6;">]</span>;
+
+  <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span>i = 0; i &lt; E; i++<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">EI</span>;
+    scanf<span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;EI<span style="color: #50fa7b;">)</span>;
+    gateways<span style="color: #50fa7b;">[</span>i<span style="color: #50fa7b;">]</span> = EI;
+   <span style="color: #ff79c6;">}</span>
+
+  <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span>1<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">SI</span>;
+    scanf<span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;SI<span style="color: #50fa7b;">)</span>;
+
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">n</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">g</span>;
+
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">found</span> = 0;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">C2</span>;
+
+    n = 0;
+    <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #50fa7b;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>found &amp;&amp; <span style="color: #bd93f9;">(</span>n &lt; links<span style="color: #0189cc;">[</span>SI<span style="color: #0189cc;">]</span>.nb_links<span style="color: #bd93f9;">)</span><span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span>
+      g = 0;
+      <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #bd93f9;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>found &amp;&amp; g &lt; E<span style="color: #bd93f9;">)</span> <span style="color: #bd93f9;">{</span>
+        <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #0189cc;">(</span>links<span style="color: #61bfff;">[</span>SI<span style="color: #61bfff;">]</span>.nodes<span style="color: #61bfff;">[</span>n<span style="color: #61bfff;">]</span> == gateways<span style="color: #61bfff;">[</span>g<span style="color: #61bfff;">]</span><span style="color: #0189cc;">)</span> <span style="color: #0189cc;">{</span>
+        found = 1;
+        C2 = gateways<span style="color: #61bfff;">[</span>g<span style="color: #61bfff;">]</span>;
+        rm_link<span style="color: #61bfff;">(</span>links, SI, gateways<span style="color: #ff79c6;">[</span>g<span style="color: #ff79c6;">]</span><span style="color: #61bfff;">)</span>;
+        <span style="color: #0189cc;">}</span>
+        ++g;
+      <span style="color: #bd93f9;">}</span>
+      ++n;
+    <span style="color: #50fa7b;">}</span>
+
+    <span style="color: #ff79c6; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span><span style="color: #bd93f9; font-weight: bold;">!</span>found<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">{</span>
+      C2 = links<span style="color: #bd93f9;">[</span>SI<span style="color: #bd93f9;">]</span>.nodes<span style="color: #bd93f9;">[</span>0<span style="color: #bd93f9;">]</span>;
+      rm_link<span style="color: #bd93f9;">(</span>links, SI, links<span style="color: #0189cc;">[</span>SI<span style="color: #0189cc;">]</span>.nodes<span style="color: #0189cc;">[</span>0<span style="color: #0189cc;">]</span><span style="color: #bd93f9;">)</span>;
+    <span style="color: #50fa7b;">}</span>
+
+    printf<span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d %d\n"</span>, SI, C2<span style="color: #50fa7b;">)</span>;
+   <span style="color: #ff79c6;">}</span>
+
+  <span style="color: #ff79c6; font-weight: bold;">return</span> 0;
+<span style="color: #61bfff;">}</span>
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfbece63" class="outline-2">
+<h2 id="orgfbece63"><span class="section-number-2">4</span> Tests</h2>
+<div class="outline-text-2" id="text-4">
+<blockquote>
+<p>
+
+</p>
+
+<p>
+<b>Remarque</b> : Le fonctionnement de cet exercice étant plutôt particulier
+(CodinGame arrête une boucle infinie quand certaines conditions sont remplies),
+il n'est pas possible de reproduire les tests sur cette page.
+</p>
+
+<p>
+Les tests seront donc proposés sous forme de vidéos.
+</p>
+</blockquote>
+
+<p>
+<a href="./videos/test1.mp4">Test 1</a>
+</p>
+
+<p>
+<a href="./videos/test2.mp4">Test 2</a>
+</p>
+
+<p>
+<a href="./videos/test3.mp4">Test 3</a>
+</p>
+
+<p>
+<a href="./videos/test4.mp4">Test 4</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7e27229" class="outline-2">
+<h2 id="org7e27229"><span class="section-number-2">5</span> Description d'une autre solution</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Cette solution a été proposée sur CodinGame par l'utilisateur "Irthene" :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C">
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdlib.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">stdio.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+<span style="color: #bd93f9; font-weight: bold;">#include</span> <span style="color: #61bfff; font-style: italic;">&lt;</span><span style="color: #f1fa8c; font-style: italic;">string.h</span><span style="color: #61bfff; font-style: italic;">&gt;</span>
+
+<span style="color: #8995ba;">/**</span>
+<span style="color: #8995ba;"> * Auto-generated code below aims at helping you parse</span>
+<span style="color: #8995ba;"> * the standard input according to the problem statement.</span>
+<span style="color: #8995ba;"> **/</span>
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #50fa7b; font-weight: bold;">inside</span><span style="color: #61bfff;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">vect</span><span style="color: #ff79c6;">[]</span>, <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">var</span>, <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">max</span><span style="color: #61bfff;">){</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">res</span>=0;
+    <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>=0;i&lt;max;i++<span style="color: #ff79c6;">){</span>
+        <span style="color: #ff79c6; font-weight: bold;">if</span><span style="color: #50fa7b;">(</span>vect<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span>==var<span style="color: #50fa7b;">){</span>
+             res=1; 
+        <span style="color: #50fa7b;">}</span>
+   <span style="color: #ff79c6;">}</span>
+   <span style="color: #ff79c6; font-weight: bold;">return</span> res;
+<span style="color: #61bfff;">}</span>
+
+<span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #50fa7b; font-weight: bold;">main</span><span style="color: #61bfff;">()</span>
+<span style="color: #61bfff;">{</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">the total number of nodes in the level, including the gateways</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">L</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">the number of links</span>
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">E</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">the number of exit gateways</span>
+
+    scanf<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d%d%d"</span>, &amp;N, &amp;L, &amp;E<span style="color: #ff79c6;">)</span>;
+
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">matlink</span><span style="color: #ff79c6;">[</span>N<span style="color: #ff79c6;">][</span>N<span style="color: #ff79c6;">]</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">gates</span><span style="color: #ff79c6;">[</span>E<span style="color: #ff79c6;">]</span>;
+    <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>,<span style="color: #ffc9e8;">j</span>;
+
+    <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #ff79c6;">(</span>i=0;i&lt;N;i++<span style="color: #ff79c6;">){</span>
+        <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #50fa7b;">(</span>j=0;j&lt;N;j++<span style="color: #50fa7b;">){</span>
+            matlink<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">][</span>j<span style="color: #bd93f9;">]</span>=0;   
+        <span style="color: #50fa7b;">}</span>
+    <span style="color: #ff79c6;">}</span>
+
+    <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span> = 0; i &lt; L; i++<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N1</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">N1 and N2 defines a link between these nodes</span>
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">N2</span>;
+        scanf<span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d%d"</span>, &amp;N1, &amp;N2<span style="color: #50fa7b;">)</span>;
+        matlink<span style="color: #50fa7b;">[</span>N1<span style="color: #50fa7b;">][</span>N2<span style="color: #50fa7b;">]</span>=1;
+        matlink<span style="color: #50fa7b;">[</span>N2<span style="color: #50fa7b;">][</span>N1<span style="color: #50fa7b;">]</span>=1;
+    <span style="color: #ff79c6;">}</span>
+    <span style="color: #ff79c6; font-weight: bold;">for</span> <span style="color: #ff79c6;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span> = 0; i &lt; E; i++<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">EI</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">the index of a gateway node</span>
+        scanf<span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;EI<span style="color: #50fa7b;">)</span>;
+        gates<span style="color: #50fa7b;">[</span>i<span style="color: #50fa7b;">]</span>=EI;
+    <span style="color: #ff79c6;">}</span>
+
+    <span style="color: #6272a4;">// </span><span style="color: #6272a4;">game loop</span>
+    <span style="color: #ff79c6; font-weight: bold;">while</span> <span style="color: #ff79c6;">(</span>1<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">{</span>
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">y</span>;
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">visit</span><span style="color: #50fa7b;">[</span>N<span style="color: #50fa7b;">]</span>;
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">ante</span><span style="color: #50fa7b;">[</span>N<span style="color: #50fa7b;">]</span>;
+        <span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">SI</span>; <span style="color: #6272a4;">// </span><span style="color: #6272a4;">The index of the node on which the Skynet agent is positioned this turn</span>
+        scanf<span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d"</span>, &amp;SI<span style="color: #50fa7b;">)</span>;
+        <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #50fa7b;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">i</span>=0;i&lt;N;i++<span style="color: #50fa7b;">){</span>
+            visit<span style="color: #bd93f9;">[</span>i<span style="color: #bd93f9;">]</span>=-1;   
+        <span style="color: #50fa7b;">}</span>
+        visit<span style="color: #50fa7b;">[</span>0<span style="color: #50fa7b;">]</span>=SI;
+        ante<span style="color: #50fa7b;">[</span>0<span style="color: #50fa7b;">]</span>=<span style="color: #8be9fd;">NULL</span>;
+        i=1;
+
+        <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Construction d'un vecteur gr&#226;ce au parcours en largeur pour trouver le chemin le plus court en partant de l'agent Skynet</span>
+        <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #50fa7b;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">j</span>=0;j&lt;N;j++<span style="color: #50fa7b;">){</span>
+            <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #bd93f9;">(</span><span style="color: #bd93f9; font-weight: bold;">int</span> <span style="color: #ffc9e8;">k</span>=0;k&lt;N;k++<span style="color: #bd93f9;">){</span>
+                <span style="color: #ff79c6; font-weight: bold;">if</span><span style="color: #0189cc;">(</span>matlink<span style="color: #61bfff;">[</span>visit<span style="color: #ff79c6;">[</span>j<span style="color: #ff79c6;">]</span><span style="color: #61bfff;">][</span>k<span style="color: #61bfff;">]</span>==1 &amp;&amp; <span style="color: #bd93f9; font-weight: bold;">!</span>inside<span style="color: #61bfff;">(</span>visit,k,N<span style="color: #61bfff;">)</span><span style="color: #0189cc;">){</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Si k n'a pas &#233;t&#233; visit&#233; et qu'il est r&#233;li&#233; au noeud "j" du vecteur "visit"</span>
+                    visit<span style="color: #61bfff;">[</span>i<span style="color: #61bfff;">]</span>=k;
+                    ante<span style="color: #61bfff;">[</span>i<span style="color: #61bfff;">]</span>=visit<span style="color: #61bfff;">[</span>j<span style="color: #61bfff;">]</span>;
+                    <span style="color: #ff79c6; font-weight: bold;">if</span><span style="color: #61bfff;">(</span>inside<span style="color: #ff79c6;">(</span>gates,k,E<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">){</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Si le noeud test&#233; est une passerelle, alors la boucle s'arr&#234;te</span>
+                        y=visit<span style="color: #ff79c6;">[</span>i<span style="color: #ff79c6;">]</span>;
+                        k=N;
+                        j=N;
+                    <span style="color: #61bfff;">}</span>
+                    <span style="color: #ff79c6; font-weight: bold;">else</span>
+                        i++;
+                <span style="color: #0189cc;">}</span>
+            <span style="color: #bd93f9;">}</span>
+        <span style="color: #50fa7b;">}</span>
+
+        <span style="color: #6272a4;">// </span><span style="color: #6272a4;">D&#233;construction du vecteur pour trouver le point du chemin le plus court reli&#233; au joueur</span>
+        <span style="color: #ff79c6; font-weight: bold;">for</span><span style="color: #50fa7b;">(</span>j=i;j&gt;0;j--<span style="color: #50fa7b;">){</span>
+            <span style="color: #ff79c6; font-weight: bold;">if</span><span style="color: #bd93f9;">(</span>ante<span style="color: #0189cc;">[</span>i<span style="color: #0189cc;">]</span>==visit<span style="color: #0189cc;">[</span>j<span style="color: #0189cc;">]</span><span style="color: #bd93f9;">){</span> <span style="color: #6272a4;">// </span><span style="color: #6272a4;">Si le premier noeud test&#233; est &#233;gal au pr&#233;d&#233;cesseur du second</span>
+                y=ante<span style="color: #0189cc;">[</span>i<span style="color: #0189cc;">]</span>;
+                i=j;
+            <span style="color: #bd93f9;">}</span>
+        <span style="color: #50fa7b;">}</span>
+
+        matlink<span style="color: #50fa7b;">[</span>SI<span style="color: #50fa7b;">][</span>y<span style="color: #50fa7b;">]</span>=0;
+        matlink<span style="color: #50fa7b;">[</span>y<span style="color: #50fa7b;">][</span>SI<span style="color: #50fa7b;">]</span>=0;
+        printf<span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"%d %d\n"</span>,SI,y<span style="color: #50fa7b;">)</span>;
+    <span style="color: #ff79c6;">}</span>
+
+    <span style="color: #ff79c6; font-weight: bold;">return</span> 0;
+<span style="color: #61bfff;">}</span>
+
+</pre>
+</div>
+
+<p>
+Cette solution a un fonctionnement assez différent de la mienne.
+</p>
+
+<p>
+Dans ma solution, on regarde seulement si l'agent Bobnet est à un lien d'une passerelle.
+Si c'est le cas, on coupe ce lien, sinon, on coupe un lien quelconque autour de
+l'agent.
+Cette solution est plus astucieuse car elle utilise un parcours en profondeur
+pour trouver le chemin le plus court entre deux nœuds.
+Ainsi, le choix du lien à couper est toujours réfléchi
+afin de ralentir le plus possible l'agent Bobnet et le
+bloquer.
+</p>
+
+<p>
+Elle a plusieurs avantages :
+</p>
+<ul class="org-ul">
+<li>Elle est plus efficace car le choix des liens n'est jamais aléatoire.</li>
+<li>Les liens sont stockés dans un tableau <i>matlink</i> où chaque élément
+<i>matlink[i][j]</i> est un entier 0 ou 1 indiquant s'il y a un lien entre <i>i</i> et
+<i>j</i>, ce qui est plus simple que de stocker les nœuds adjacents dans un tableau
+partiellement rempli.</li>
+</ul>
+
+<p>
+Cependant, les initialisations de tableau (<i>int matlink[N][N];</i>)
+ne fonctionneraient pas un programme normal.
+CodinGame doit certainement traiter lui-même ce cas qui provoquerait en temps
+normal une erreur de compilation.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org261ff2f" class="outline-2">
+<h2 id="org261ff2f"><span class="section-number-2">6</span> Conclusion</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Pour conclure, lors de cet exercice, j'ai pu :
+</p>
+<ul class="org-ul">
+<li>revoir la notion de graphe vue au lycée (Cours de NSI en terminale).</li>
+<li>manipuler le type <i>struct</i> du langage C.</li>
+<li>comparer mon programme avec celui d'autres personnes et
+découvrir des solutions plus efficaces que celle trouvée.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 11/04/2022</p>
+<p class="author">Auteur: Valentin PORTAIL</p>
+<p class="date">Created: 2022-04-09 sam. 15:26</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
